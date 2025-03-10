@@ -39,7 +39,7 @@ public class Customer {
     private String street;
 
     @Column(name = "id_number")
-    private Integer idNumber;
+    private String idNumber;
 
     @Column(name = "role_id")
     private Integer roleId;
@@ -128,11 +128,11 @@ public class Customer {
         this.street = street;
     }
 
-    public Integer getIdNumber() {
+    public String getIdNumber() {
         return idNumber;
     }
 
-    public void setIdNumber(Integer idNumber) {
+    public void setIdNumber(String idNumber) {
         this.idNumber = idNumber;
     }
 
