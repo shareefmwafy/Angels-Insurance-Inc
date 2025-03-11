@@ -1,6 +1,6 @@
 package com.asal.insurance_system.Model;
 
-import com.asal.insurance_system.Enum.Permission;
+import com.asal.insurance_system.Enum.EnumRolePermission;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -17,6 +17,7 @@ public class Role {
     @Column(name = "role_name")
     private String roleName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "list_of_role")
-    private List<Permission> listOfPermission;
+    private List<EnumRolePermission> listOfEnumRolePermission;
 }
