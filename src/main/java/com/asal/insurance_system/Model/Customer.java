@@ -2,10 +2,8 @@ package com.asal.insurance_system.Model;
 
 
 import com.asal.insurance_system.Enum.EnumPolicyType;
-import com.asal.insurance_system.Enum.EnumRolePermission;
+import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
-
-import java.util.Date;
 
 @Entity
 @Table(name = "customers")
@@ -38,14 +36,14 @@ public class Customer{
     protected String idNumber;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
-    protected EnumRolePermission role;
+    protected Role role;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "policy_type")
     protected EnumPolicyType PolicyType;
     @Column(name = "claim_history")
     protected String claimHistory;
 
-    public Customer(String firstName, String lastName, String email, String password, String idNumber, EnumRolePermission role) {
+    public Customer(String firstName, String lastName, String email, String password, String idNumber, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -150,11 +148,11 @@ public class Customer{
         this.idNumber = idNumber;
     }
 
-    public EnumRolePermission getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(EnumRolePermission role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

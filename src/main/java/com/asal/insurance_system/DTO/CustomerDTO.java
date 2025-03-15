@@ -1,6 +1,6 @@
 package com.asal.insurance_system.DTO;
 
-import com.asal.insurance_system.Enum.EnumRolePermission;
+import com.asal.insurance_system.Enum.Role;
 
 public class CustomerDTO {
         private String firstName;
@@ -8,7 +8,7 @@ public class CustomerDTO {
         private String email;
         private String password;
         private String idNumber;
-        private EnumRolePermission role;
+        private Role role;
 
     public String getFirstName() {
         return firstName;
@@ -50,11 +50,11 @@ public class CustomerDTO {
         this.idNumber = idNumber;
     }
 
-    public EnumRolePermission getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(EnumRolePermission role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

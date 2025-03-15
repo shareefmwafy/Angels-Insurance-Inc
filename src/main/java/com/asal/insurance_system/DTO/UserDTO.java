@@ -1,6 +1,6 @@
 package com.asal.insurance_system.DTO;
 
-import com.asal.insurance_system.Enum.EnumRolePermission;
+import com.asal.insurance_system.Enum.Role;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ public class UserDTO {
     private String email;
     private String password;
     private String idNumber;
-    private EnumRolePermission role;
+    private Role role;
     private Integer departmentId;
     private Date hiringDate;
     private Float salary;
@@ -21,7 +21,7 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String firstName, String lastName, String email, String password, String idNumber, EnumRolePermission role, Integer departmentId, Date hiringDate, Float salary) {
+    public UserDTO(String firstName, String lastName, String email, String password, String idNumber, Role role, Integer departmentId, Date hiringDate, Float salary) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -67,11 +67,11 @@ public class UserDTO {
         this.idNumber = idNumber;
     }
 
-    public EnumRolePermission getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(EnumRolePermission role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

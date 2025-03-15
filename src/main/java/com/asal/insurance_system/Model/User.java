@@ -1,6 +1,6 @@
 package com.asal.insurance_system.Model;
 
-import com.asal.insurance_system.Enum.EnumRolePermission;
+import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -53,7 +53,7 @@ public class User implements UserDetails {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
-    private EnumRolePermission role;
+    private Role role;
 
     @Column(name = "department_id")
     private Integer departmentId;
@@ -62,7 +62,7 @@ public class User implements UserDetails {
     @Column(name = "salary")
     private Float salary;
 
-    public User(String firstName, String lastName, String email, String password, String idNumber, EnumRolePermission role, Integer departmentId, Date hiringDate, Float salary) {
+    public User(String firstName, String lastName, String email, String password, String idNumber, Role role, Integer departmentId, Date hiringDate, Float salary) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -74,10 +74,12 @@ public class User implements UserDetails {
         this.salary = salary;
     }
 
-    public User(){}
+    public User(){
+
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return role.getAuthorities();
     }
 
     @Override
@@ -206,11 +208,11 @@ public class User implements UserDetails {
         this.idNumber = idNumber;
     }
 
-    public EnumRolePermission getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(EnumRolePermission role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

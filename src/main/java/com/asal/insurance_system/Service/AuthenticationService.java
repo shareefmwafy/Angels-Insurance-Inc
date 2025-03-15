@@ -4,19 +4,15 @@ import com.asal.insurance_system.Auth.AuthenticationRequest;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.Configuration.JwtService;
 import com.asal.insurance_system.DTO.UserDTO;
-import com.asal.insurance_system.Enum.EnumRolePermission;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +27,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(UserDTO userDTO) {
-//        userDTO.setRole(EnumRolePermission.USER);
         User user = new User(
                 userDTO.getFirstName(),
                 userDTO.getLastName(),
