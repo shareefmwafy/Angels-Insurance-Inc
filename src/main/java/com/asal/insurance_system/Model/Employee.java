@@ -1,152 +1,86 @@
-package com.asal.insurance_system.Model;
-
-
-import jakarta.persistence.*;
-
-import java.util.Date;
-
-@Entity
-@Table(name = "Employees")
-public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer employee_id;
-
-    private String firstName;
-    private String secondName;
-    private String thirdName;
-    private String lastName;
-    private String phoneNumber;
-    private String email;
-    private String country;
-    private String city;
-    private String street;
-    private String idNumber;
-    private Integer roleId;
-    private Integer departmentId;
-    private Date hiringDate;
-    private Float salary;
-
-    public Integer getEmployee_id() {
-        return employee_id;
-    }
-
-    public void setEmployee_id(Integer employee_id) {
-        this.employee_id = employee_id;
-    }
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
-    public String getThirdName() {
-        return thirdName;
-    }
-
-    public void setThirdName(String thirdName) {
-        this.thirdName = thirdName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getIdNumber() {
-        return idNumber;
-    }
-
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
-    }
-
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
-    public Integer getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(Integer departmentId) {
-        this.departmentId = departmentId;
-    }
-
-    public Date getHiringDate() {
-        return hiringDate;
-    }
-
-    public void setHiringDate(Date hiringDate) {
-        this.hiringDate = hiringDate;
-    }
-
-    public Float getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Float salary) {
-        this.salary = salary;
-    }
-
-
-}
+//package com.asal.insurance_system.Model;
+//
+//
+//import com.asal.insurance_system.Enum.EnumRolePermission;
+//import jakarta.persistence.*;
+//
+//import java.util.Date;
+//
+//@Entity
+//@Table(name = "employees")
+//public class Employee extends User{
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "employee_id")
+//    private Integer employeeId;
+//    private Integer departmentId;
+//    private Date hiringDate;
+//    private Float salary;
+//
+//    public Employee(String firstName, String secondName, String thirdName, String lastName, String phoneNumber, String email, String password, String country, String city, String street, String idNumber, EnumRolePermission role, Integer departmentId, Date hiringDate, Float salary) {
+//        this.firstName = firstName;
+//        this.secondName = secondName;
+//        this.thirdName = thirdName;
+//        this.lastName = lastName;
+//        this.phoneNumber = phoneNumber;
+//        this.email = email;
+//        this.password = password;
+//        this.country = country;
+//        this.city = city;
+//        this.street = street;
+//        this.idNumber = idNumber;
+//        this.role = role;
+//        this.departmentId = departmentId;
+//        this.hiringDate = hiringDate;
+//        this.salary = salary;
+//    }
+//
+//    public Employee(String firstName, String lastName, String email, String password, String idNumber, EnumRolePermission role, Integer departmentId, Date hiringDate, Float salary) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.password = password;
+//        this.idNumber = idNumber;
+//        this.role = role;
+//        this.departmentId = departmentId;
+//        this.hiringDate = hiringDate;
+//        this.salary = salary;
+//    }
+//
+//    public Employee() {
+//    }
+//
+//    public Integer getEmployeeId() {
+//        return employeeId;
+//    }
+//
+//    public void setEmployeeId(Integer employeeId) {
+//        this.employeeId = employeeId;
+//    }
+//
+//    public Integer getDepartmentId() {
+//        return departmentId;
+//    }
+//
+//    public void setDepartmentId(Integer departmentId) {
+//        this.departmentId = departmentId;
+//    }
+//
+//    public Date getHiringDate() {
+//        return hiringDate;
+//    }
+//
+//    public void setHiringDate(Date hiringDate) {
+//        this.hiringDate = hiringDate;
+//    }
+//
+//    public Float getSalary() {
+//        return salary;
+//    }
+//
+//    public void setSalary(Float salary) {
+//        this.salary = salary;
+//    }
+//
+//
+//}

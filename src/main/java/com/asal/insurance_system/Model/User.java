@@ -1,58 +1,115 @@
 package com.asal.insurance_system.Model;
 
-
-import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Enum.EnumRolePermission;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "customers")
-public class Customer{
+@Table(name = "users")
+public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id")
+    @Column(name = "employee_id")
     private Integer Id;
+
     @Column(name = "first_name")
-    protected String firstName;
+    private String firstName;
     @Column(name = "second_name")
-    protected String secondName;
+    private String secondName;
+
     @Column(name= "third_name")
-    protected String  thirdName;
+    private String  thirdName;
+
     @Column(name = "last_name")
-    protected String lastName;
+    private String lastName;
+
     @Column(name = "phone_number")
-    protected String phoneNumber;
+    private String phoneNumber;
+
     @Column(name = "email")
-    protected String email;
+    private String email;
+
     @Column(name = "password")
-    protected String password;
+    private String password;
+
     @Column(name = "country")
-    protected String country;
+    private String country;
+
     @Column(name = "city")
-    protected String city;
+    private String city;
+
     @Column(name = "street")
-    protected String street;
+    private String street;
+
     @Column(name = "id_number")
-    protected String idNumber;
+    private String idNumber;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
-    protected EnumRolePermission role;
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "policy_type")
-    protected EnumPolicyType PolicyType;
-    @Column(name = "claim_history")
-    protected String claimHistory;
+    private EnumRolePermission role;
 
-    public Customer(String firstName, String lastName, String email, String password, String idNumber, EnumRolePermission role) {
+    @Column(name = "department_id")
+    private Integer departmentId;
+    @Column(name = "hiring_date")
+    private Date hiringDate;
+    @Column(name = "salary")
+    private Float salary;
+
+    public User(String firstName, String lastName, String email, String password, String idNumber, EnumRolePermission role, Integer departmentId, Date hiringDate, Float salary) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.idNumber = idNumber;
         this.role = role;
+        this.departmentId = departmentId;
+        this.hiringDate = hiringDate;
+        this.salary = salary;
     }
+
+    public User(){}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
 
     public Integer getId() {
         return Id;
@@ -110,9 +167,8 @@ public class Customer{
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
+
+
 
     public void setPassword(String password) {
         this.password = password;
@@ -158,19 +214,27 @@ public class Customer{
         this.role = role;
     }
 
-    public EnumPolicyType getPolicyType() {
-        return PolicyType;
+    public Integer getDepartmentId() {
+        return departmentId;
     }
 
-    public void setPolicyType(EnumPolicyType policyType) {
-        PolicyType = policyType;
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
     }
 
-    public String getClaimHistory() {
-        return claimHistory;
+    public Date getHiringDate() {
+        return hiringDate;
     }
 
-    public void setClaimHistory(String claimHistory) {
-        this.claimHistory = claimHistory;
+    public void setHiringDate(Date hiringDate) {
+        this.hiringDate = hiringDate;
+    }
+
+    public Float getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Float salary) {
+        this.salary = salary;
     }
 }
