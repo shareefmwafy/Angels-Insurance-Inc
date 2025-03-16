@@ -1,14 +1,86 @@
 package com.asal.insurance_system.DTO;
 
+import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Enum.Role;
 
 public class CustomerDTO {
-        private String firstName;
-        private String lastName;
-        private String email;
-        private String password;
-        private String idNumber;
-        private Role role;
+    private String firstName;
+    private String secondName;
+    private String thirdName;
+    private String lastName;
+    private String phoneNumber;
+    private String email;
+    private String password;
+    private String country;
+    private String city;
+    private String street;
+    private String idNumber;
+    private EnumPolicyType policyType;
+    private String claimHistory;
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public String getThirdName() {
+        return thirdName;
+    }
+
+    public void setThirdName(String thirdName) {
+        this.thirdName = thirdName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public EnumPolicyType getPolicyType() {
+        return policyType;
+    }
+
+    public void setPolicyType(EnumPolicyType policyType) {
+        this.policyType = policyType;
+    }
+
+    public String getClaimHistory() {
+        return claimHistory;
+    }
+
+    public void setClaimHistory(String claimHistory) {
+        this.claimHistory = claimHistory;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -50,11 +122,5 @@ public class CustomerDTO {
         this.idNumber = idNumber;
     }
 
-    public Role getRole() {
-        return role;
-    }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

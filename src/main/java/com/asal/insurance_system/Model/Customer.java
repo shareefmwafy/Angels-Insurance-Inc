@@ -34,22 +34,33 @@ public class Customer{
     protected String street;
     @Column(name = "id_number")
     protected String idNumber;
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "role")
-    protected Role role;
+//    @Enumerated(value = EnumType.STRING)
+//    @Column(name = "role")
+//    protected Role role;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "policy_type")
     protected EnumPolicyType PolicyType;
     @Column(name = "claim_history")
     protected String claimHistory;
 
-    public Customer(String firstName, String lastName, String email, String password, String idNumber, Role role) {
+    public Customer(String firstName, String secondName, String thirdName, String lastName, String phoneNumber, String email, String password, String country, String city, String street, String idNumber, EnumPolicyType policyType, String claimHistory) {
         this.firstName = firstName;
+        this.secondName = secondName;
+        this.thirdName = thirdName;
         this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = password;
+        this.country = country;
+        this.city = city;
+        this.street = street;
         this.idNumber = idNumber;
-        this.role = role;
+        PolicyType = policyType;
+        this.claimHistory = claimHistory;
+    }
+
+    public Customer (){
+
     }
 
     public Integer getId() {
@@ -148,13 +159,6 @@ public class Customer{
         this.idNumber = idNumber;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
     public EnumPolicyType getPolicyType() {
         return PolicyType;
