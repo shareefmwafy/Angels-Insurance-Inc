@@ -4,6 +4,8 @@ package com.asal.insurance_system.Service;
 import com.asal.insurance_system.DTO.CustomerDTO;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Repository.CustomerRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CustomerService {
 
@@ -20,6 +23,8 @@ public class CustomerService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+//    private final Logger logeer
     public void addCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer(
                 customerDTO.getFirstName(),
