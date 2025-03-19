@@ -19,7 +19,7 @@ public class AuthController {
     @PostMapping(path = "/authenticate")
     public ResponseEntity<AuthenticationResponse> auth(@RequestBody AuthenticationRequest authRequest)
     {
-        return ResponseEntity.ok(authenticationService.authenticate(authRequest));
+        return ResponseEntity.ok(authenticationService.login(authRequest));
     }
 
 

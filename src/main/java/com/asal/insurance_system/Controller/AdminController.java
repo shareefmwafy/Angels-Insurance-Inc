@@ -4,6 +4,7 @@ package com.asal.insurance_system.Controller;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.UserDTO;
 import com.asal.insurance_system.Service.AuthenticationService;
+import com.asal.insurance_system.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final AuthenticationService authenticationService;
+    private final UserService userService;
     @PostMapping(path = "/add-user")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO userDTO)
     {
-        return ResponseEntity.ok(authenticationService.register(userDTO));
+        return ResponseEntity.ok(userService.addUser(userDTO));
     }
 
     @GetMapping

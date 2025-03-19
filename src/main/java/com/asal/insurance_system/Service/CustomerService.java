@@ -1,11 +1,15 @@
 package com.asal.insurance_system.Service;
 
 
+import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.CustomerDTO;
+import com.asal.insurance_system.Mapper.CustomerMapper;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,33 +19,23 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
-
-
     @Autowired
     CustomerRepository customerRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final CustomerMapper customerMapper;
 
-//    private final Logger logeer
+    private final Logger logeer = LoggerFactory.getLogger(CustomerService.class);
     public void addCustomer(CustomerDTO customerDTO) {
-        Customer customer = new Customer(
-                customerDTO.getFirstName(),
-                customerDTO.getSecondName(),
-                customerDTO.getThirdName(),
-                customerDTO.getLastName(),
-                customerDTO.getPhoneNumber(),
-                customerDTO.getEmail(),
-                this.passwordEncoder.encode(customerDTO.getPassword()),
-                customerDTO.getCountry(),
-                customerDTO.getCity(),
-                customerDTO.getStreet(),
-                customerDTO.getIdNumber(),
-                customerDTO.getPolicyType(),
-                customerDTO.getClaimHistory()
-        );
-        customerRepository.save(customer);
+        try{
+            Customer customer = customerMapper.mapToEntity(customerDTO);
+            customerRepository.save(customer);
+        }
+        catch (Exception e){
+            logeer.error("Error Occurred while Adding Customer");
+            throw e;
+        }
     }
 
     public Optional<Customer> getCustomerById(Integer customerId) {
