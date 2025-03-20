@@ -8,6 +8,7 @@ import com.asal.insurance_system.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,14 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers(){
         List<Customer> customers = customerService.getAllCustomers();
         return ResponseEntity.ok(customers);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping(path = "/customer/{customer-id}")
     public ResponseEntity<Object> getCustomer(@PathVariable("customer-id") Integer customerId){
         try{
@@ -52,6 +55,7 @@ public class CustomerController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PostMapping(path = "/add-customer")
     public ResponseEntity<Object> addCustomer(@RequestBody CustomerDTO customerDTO)
     {
@@ -87,6 +91,7 @@ public class CustomerController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @DeleteMapping(path = "/delete-customer/{customer-id}")
     public ResponseEntity<Object> deleteCustomer(@PathVariable("customer-id") Integer customerId){
         try {
@@ -118,6 +123,7 @@ public class CustomerController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping(path = "/update-customer/{customer-id}")
     public ResponseEntity<Object> updateCustomer(@PathVariable("customer-id") Integer customerId, @RequestBody CustomerDTO customerDTO) {
         try {

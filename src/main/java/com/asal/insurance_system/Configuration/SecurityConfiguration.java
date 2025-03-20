@@ -3,6 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     private final JWTAuthenticationFilter jwtAuthFilter;
@@ -29,25 +31,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
-
-                .requestMatchers("/api/v1/user/**").hasAnyRole(ADMIN.name(), USER.name())
-                .requestMatchers(GET, "/api/v1/user/**").hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
-                .requestMatchers(POST, "/api/v1/user/**").hasAnyAuthority(ADMIN_CREATE.name(), USER_CREATE.name())
-                .requestMatchers(PUT, "/api/v1/user/**").hasAnyAuthority(ADMIN_UPDATE.name(), USER_UPDATE.name())
-                .requestMatchers(DELETE, "/api/v1/user/**").hasAnyAuthority(ADMIN_DELETE.name(), USER_DELETE.name())
-
-                .requestMatchers("/api/v1/customers/**").hasAnyRole(ADMIN.name(), USER.name())
-                .requestMatchers(GET, "/api/v1/customers/**").hasAnyAuthority(ADMIN_READ.name(), USER_READ.name())
-                .requestMatchers(POST, "/api/v1/customers/**").hasAnyAuthority(ADMIN_CREATE.name(), USER_CREATE.name())
-                .requestMatchers(PUT, "/api/v1/customers/**").hasAnyAuthority(ADMIN_UPDATE.name(), USER_UPDATE.name())
-                .requestMatchers(DELETE, "/api/v1/customers/**").hasAnyAuthority(ADMIN_DELETE.name(), USER_DELETE.name())
-
-                .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
-                .requestMatchers(GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
-                .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
-                .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
-                .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
-
                 .anyRequest()
                 .authenticated()
                 .and()
