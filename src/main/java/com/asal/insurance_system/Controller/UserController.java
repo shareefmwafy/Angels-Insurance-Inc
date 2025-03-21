@@ -33,25 +33,9 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/user/{userId}")
-    public ResponseEntity<Object> get(@PathVariable("userId") Integer userId){
-        try
-        {
-            Optional<User> user = userService.findUserById(userId);
-            if(user.isEmpty()){
-                return ResponseEntity.ok(
-                        new ApiResponse("user Not Found", HttpStatus.NOT_FOUND.value())
-                );
-            }
-            return ResponseEntity.ok(
-                    new ApiResponse("User Found", HttpStatus.OK.value(),user)
-            );
-        }
-        catch (Exception e)
-        {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ApiResponse("Internal Server Error: "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR.value())
-            );
-        }
+    public ResponseEntity<Object> get(@PathVariable("userId") Integer userId)
+    {
+        return userService.getUserById(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

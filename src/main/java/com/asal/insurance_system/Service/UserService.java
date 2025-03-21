@@ -72,9 +72,42 @@ public class UserService {
             );
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> getUserById(Integer userId) {
+        try
+        {
+            Optional<User> user = userRepository.findById(userId);
+            if(user.isEmpty())
+            {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse(
+                        "User Not Found",
+                        HttpStatus.NOT_FOUND.value()
+                    )
+                );
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse(
+                    "User found successfully",
+                    HttpStatus.OK.value(),
+                    user
+                )
+            );
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ApiResponse(
+                    "Internal Server Error: "+e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+                )
+            );
+        }
+    }
     public Optional<User> findUserById(Integer userId){
         return (userRepository.findById(userId));
     }
+
     public boolean isUserExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
