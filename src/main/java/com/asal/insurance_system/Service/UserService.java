@@ -23,7 +23,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -34,7 +33,8 @@ public class UserService {
     private final JwtService jwtService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> addUser(UserDTO userDTO) {
+    public ResponseEntity<Object> addUser(UserDTO userDTO)
+    {
         try{
             if(isUserExist(userDTO.getEmail()))
             {
@@ -74,7 +74,8 @@ public class UserService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> getUserById(Integer userId) {
+    public ResponseEntity<Object> getUserById(Integer userId)
+    {
         try
         {
             Optional<User> user = userRepository.findById(userId);
@@ -104,11 +105,42 @@ public class UserService {
             );
         }
     }
-    public Optional<User> findUserById(Integer userId){
-        return (userRepository.findById(userId));
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public boolean isUserExist(String email)
+    {
+        return userRepository.findByEmail(email).isPresent();
     }
 
-    public boolean isUserExist(String email) {
-        return userRepository.findByEmail(email).isPresent();
+    public ResponseEntity<Object> deleteUserById(Integer userId)
+    {
+        try
+        {
+            Optional<User> user = userRepository.findById(userId);
+            if(user.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse(
+                        "User Not Found",
+                        HttpStatus.NOT_FOUND.value()
+                    )
+                );
+            }
+            userRepository.deleteById(userId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
+                new ApiResponse(
+                    "User deleted Successfully",
+                    HttpStatus.NO_CONTENT.value()
+                )
+            );
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ApiResponse(
+                    "Error while deleting user",
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+                )
+            );
+        }
     }
 }
