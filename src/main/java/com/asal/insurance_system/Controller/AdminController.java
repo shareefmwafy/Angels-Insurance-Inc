@@ -14,12 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final UserService userService;
-    @PostMapping(path = "/add-user")
-    @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody UserDTO userDTO)
-    {
-        return ResponseEntity.ok(userService.addUser(userDTO));
-    }
+
 
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read')")
