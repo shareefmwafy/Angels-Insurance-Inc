@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,28 +26,34 @@ public class UserController {
     UserService userService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(path = "/add-user")
-    public ResponseEntity<Object> register(@RequestBody @Valid UserDTO userDTO)
+    @PostMapping
+    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDTO userDTO)
     {
         return userService.addUser(userDTO);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public ResponseEntity<Object> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/user/{userId}")
-    public ResponseEntity<Object> get(@PathVariable("userId") Integer userId)
+    public ResponseEntity<Object> getUser(@PathVariable("userId") Integer userId)
     {
         return userService.getUserById(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping
-    public String put(){
-        return "PUT:: User Controller";
+    @DeleteMapping(path = "/user/{userId}")
+    public ResponseEntity<Object> deleteUser(@PathVariable("userId") Integer userId)
+    {
+        return userService.deleteUserById(userId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping(path = "/user/{userId}")
-    public ResponseEntity<Object> Delete(@PathVariable("userId") Integer userId){
-        return userService.deleteUserById(userId);
+    @PutMapping(path = "/user/{userId}")
+    public String updateUser(@PathVariable("userId") Integer userId){
+        return "PUT:: User Controller";
     }
 }

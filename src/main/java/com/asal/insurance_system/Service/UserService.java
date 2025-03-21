@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -143,4 +144,29 @@ public class UserService {
             );
         }
     }
+
+    public ResponseEntity<Object> getAllUsers()
+    {
+        try
+        {
+            List<User> users = userRepository.findAll();
+            return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse(
+                    "Successfully retrieved all Users",
+                    HttpStatus.OK.value(),
+                    users
+                )
+            );
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ApiResponse(
+                    "Error occurred while retrieving users",
+                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+                )
+            );
+        }
+    }
+
 }
