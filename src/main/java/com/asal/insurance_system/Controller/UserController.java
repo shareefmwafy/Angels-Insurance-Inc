@@ -18,7 +18,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDTO userDTO)
+    public ResponseEntity<Object> addUser(@Valid @RequestBody UserDTO userDTO)
     {
         return userService.addUser(userDTO);
     }
