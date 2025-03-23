@@ -169,4 +169,34 @@ public class UserService {
         }
     }
 
+    public ResponseEntity<Object> updateUser(Integer userId, User user) {
+        try
+        {
+            Optional<User> optionalUser = userRepository.findById(userId);
+            if(optionalUser.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ApiResponse(
+                                "User Not Found.",
+                                HttpStatus.NOT_FOUND.value()
+                        )
+                );
+            }
+            User existingUser = optionalUser.get();
+            userMapper.mapToUpdatedUser(user,existingUser);
+            userRepository.save(existingUser);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                new ApiResponse("User updated Successfully.",
+                    HttpStatus.OK.value(),
+                        existingUser
+                )
+            );
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                new ApiResponse("Error occurred while updating user.", HttpStatus.INTERNAL_SERVER_ERROR.value())
+            );
+        }
+    }
 }
