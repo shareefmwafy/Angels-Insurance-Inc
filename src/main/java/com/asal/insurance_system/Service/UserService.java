@@ -35,7 +35,7 @@ public class UserService {
     private final JwtService jwtService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Object> addUser(@Valid UserDTO userDTO)
+    public ResponseEntity<Object> addUser(UserDTO userDTO)
     {
         try{
             if(isUserExist(userDTO.getEmail()))
@@ -184,6 +184,7 @@ public class UserService {
             }
             User existingUser = optionalUser.get();
             userMapper.mapToUpdatedUser(user,existingUser);
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(existingUser);
 
             return ResponseEntity.status(HttpStatus.OK).body(
