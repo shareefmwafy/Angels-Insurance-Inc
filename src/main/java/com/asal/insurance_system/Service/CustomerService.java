@@ -26,7 +26,11 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private final CustomerMapper customerMapper;
+
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
@@ -43,6 +47,7 @@ public class CustomerService {
             }
             Customer existingCustomer = optionalCustomer.get();
             customerMapper.mapToUpdatedCustomer(customer,existingCustomer);
+            existingCustomer.setPassword(passwordEncoder.encode(customer.getPassword()));
             customerRepository.save(existingCustomer);
 
             return ResponseEntity.status(HttpStatus.OK).body(
@@ -56,7 +61,7 @@ public class CustomerService {
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new ApiResponse(
-                            "Error While update Customer",
+                            "Error While update Customer: "+e.getMessage(),
                             HttpStatus.INTERNAL_SERVER_ERROR.value()
                     )
             );
@@ -104,11 +109,12 @@ public class CustomerService {
                 );
             }
             Customer newCustomer = customerMapper.mapToEntity(customerDTO);
+            newCustomer.setPassword(passwordEncoder.encode(newCustomer.getPassword()));
             customerRepository.save(newCustomer);
-            return ResponseEntity.status(HttpStatus.OK).body(
+            return ResponseEntity.status(HttpStatus.CREATED).body(
                     new ApiResponse(
                             "Customer Created Successfully",
-                            HttpStatus.OK.value()
+                            HttpStatus.CREATED.value()
                     )
             );
         }
