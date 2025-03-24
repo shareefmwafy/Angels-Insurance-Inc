@@ -5,6 +5,7 @@ import com.asal.insurance_system.Auth.AuthenticationRequest;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.UserDTO;
 import com.asal.insurance_system.Service.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +18,9 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping(path = "/authenticate")
-    public ResponseEntity<AuthenticationResponse> auth(@RequestBody AuthenticationRequest authRequest)
+    public ResponseEntity<Object> auth(@Valid @RequestBody AuthenticationRequest authRequest)
     {
-        return ResponseEntity.ok(authenticationService.login(authRequest));
+        return authenticationService.login(authRequest);
     }
 
 
