@@ -1,4 +1,4 @@
-package com.asal.insurance_system.Controller;
+package com.asal.insurance_system.Controller.Admin;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.UserDTO;
 import com.asal.insurance_system.Service.UserService;
