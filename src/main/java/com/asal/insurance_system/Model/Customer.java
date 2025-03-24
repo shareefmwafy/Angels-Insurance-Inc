@@ -4,6 +4,9 @@ package com.asal.insurance_system.Model;
 import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "customers")
@@ -12,31 +15,51 @@ public class Customer{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private Integer Id;
+    @NotNull(message = "First name is required")
+    @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
     @Column(name = "first_name")
     protected String firstName;
+    @NotNull(message = "Second name is required")
+    @Size(min = 1, max = 50, message = "Second name must be between 1 and 50 characters")
     @Column(name = "second_name")
     protected String secondName;
+    @NotNull(message = "Third name is required")
+    @Size(min = 1, max = 50, message = "Third name must be between 1 and 50 characters")
     @Column(name= "third_name")
     protected String  thirdName;
+    @NotNull(message = "Last name is required")
+    @Size(min = 1, max = 50, message = "Last name must be between 1 and 50 characters")
     @Column(name = "last_name")
     protected String lastName;
+    @NotNull(message = "Phone number is required")
     @Column(name = "phone_number")
     protected String phoneNumber;
+    @NotNull(message = "Email is required")
+    @Email(message = "Invalid email format")
     @Column(name = "email")
     protected String email;
+
+    @NotNull(message = "Password is required")
+    @Size(min = 8, message = "Password must be between 6 and 20 characters")
     @Column(name = "password")
     protected String password;
+    @NotNull(message = "Country is required")
+    @Size(min = 1, max = 50, message = "Country must be between 1 and 50 characters")
     @Column(name = "country")
     protected String country;
+
+    @NotNull(message = "City is required")
+    @Size(min = 1, max = 50, message = "City must be between 1 and 50 characters")
     @Column(name = "city")
     protected String city;
+    @NotNull(message = "Street is required")
+    @Size(min = 1, max = 100, message = "Street must be between 1 and 100 characters")
     @Column(name = "street")
     protected String street;
+    @NotNull(message = "ID number is required")
     @Column(name = "id_number")
     protected String idNumber;
-//    @Enumerated(value = EnumType.STRING)
-//    @Column(name = "role")
-//    protected Role role;
+    @NotNull(message = "Policy type is required")
     @Enumerated(value = EnumType.STRING)
     @Column(name = "policy_type")
     protected EnumPolicyType PolicyType;
