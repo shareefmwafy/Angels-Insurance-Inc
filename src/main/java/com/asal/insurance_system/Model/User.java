@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -71,10 +72,22 @@ public class User implements UserDetails {
         this.hiringDate = hiringDate;
         this.salary = salary;
     }
+    public User(){}
 
-    public User(){
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
 
+        User user = (User) obj;
+        return Objects.equals(Id, user.getId());
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Id);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
