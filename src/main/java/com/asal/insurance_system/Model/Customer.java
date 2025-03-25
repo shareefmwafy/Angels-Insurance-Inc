@@ -94,7 +94,7 @@ public class Customer{
         Customer customer = (Customer) obj;
         return Objects.equals(Id, customer.getId());
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(Id);
