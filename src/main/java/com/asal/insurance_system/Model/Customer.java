@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "customers")
 public class Customer{
@@ -82,8 +84,20 @@ public class Customer{
         this.claimHistory = claimHistory;
     }
 
-    public Customer (){
+    public Customer (){}
 
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+
+        Customer customer = (Customer) obj;
+        return Objects.equals(Id, customer.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Id);
     }
 
     public Integer getId() {
