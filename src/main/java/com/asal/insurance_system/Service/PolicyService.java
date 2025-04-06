@@ -1,6 +1,9 @@
 package com.asal.insurance_system.Service;
 
 import com.asal.insurance_system.DTO.Request.PolicyRequestDTO;
+import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
+import com.asal.insurance_system.Enum.EnumPolicyStatus;
+import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.Policy;
@@ -11,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -53,4 +59,49 @@ public class PolicyService {
 
         return savedPolicy;
     }
+
+    public PolicyResponseDTO getPolicyById(Integer id){
+        Policy policy = policyRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found with Id " + id));
+
+        PolicyResponseDTO responseDTO = new PolicyResponseDTO();
+        responseDTO.setPolicyId(policy.getPolicyId());
+        responseDTO.setPolicyType(EnumPolicyType.valueOf(policy.getPolicyType().toString()));  // Assuming it's an Enum, convert to String
+        responseDTO.setPolicyStatus(EnumPolicyStatus.valueOf(policy.getPolicyStatus().toString()));
+        responseDTO.setAmount(policy.getAmount());
+        responseDTO.setStartDate(policy.getStartDate());
+        responseDTO.setEndDate(policy.getEndDate());
+        responseDTO.setCustomerId(policy.getCustomer().getId());
+
+        return responseDTO;
+    }
+
+    public List<PolicyResponseDTO> getAllPolices(){
+        List<Policy> policies = policyRepository.findAll();
+        return policies.stream()
+                .map(PolicyResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public Policy updatePolicy(int id, PolicyRequestDTO requestDTO){
+        Policy policyInDb = policyRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found"));
+
+        policyInDb.setPolicyStatus(requestDTO.getPolicyStatus());
+        policyInDb.setPolicyType(requestDTO.getPolicyType());
+        policyInDb.setAmount(requestDTO.getAmount());
+        policyInDb.setEndDate(requestDTO.getEndDate());
+        policyInDb.setStartDate(requestDTO.getStartDate());
+
+        return policyRepository.save(policyInDb);
+    }
+
+    public boolean deletePolicy(int id){
+        Policy policyInDb = policyRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found"));
+        policyRepository.delete(policyInDb);
+
+        return true;
+    }
+
 }
