@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -68,6 +69,12 @@ public class Customer{
     @Column(name = "claim_history")
     protected String claimHistory;
 
+
+    @OneToMany(mappedBy = "customer")
+    private List<Policy> policies;
+
+
+
     public Customer(String firstName, String secondName, String thirdName, String lastName, String phoneNumber, String email, String password, String country, String city, String street, String idNumber, EnumPolicyType policyType, String claimHistory) {
         this.firstName = firstName;
         this.secondName = secondName;
@@ -85,6 +92,14 @@ public class Customer{
     }
 
     public Customer (){}
+
+    public List<Policy> getPolicies() {
+        return policies;
+    }
+
+    public void setPolicies(List<Policy> policies) {
+        this.policies = policies;
+    }
 
     @Override
     public boolean equals(Object obj) {

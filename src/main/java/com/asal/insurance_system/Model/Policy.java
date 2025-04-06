@@ -2,6 +2,7 @@ package com.asal.insurance_system.Model;
 
 import com.asal.insurance_system.Enum.EnumPolicyStatus;
 import com.asal.insurance_system.Enum.EnumPolicyType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ public class Policy {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)  // Foreign key reference
+    @JsonBackReference
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
