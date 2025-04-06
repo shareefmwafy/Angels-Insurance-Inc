@@ -2,6 +2,7 @@ package com.asal.insurance_system.Model;
 
 import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,52 +14,49 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
     private Integer Id;
-
+    @NotNull(message = "First name is mandatory")
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "second_name")
     private String secondName;
-
     @Column(name= "third_name")
     private String  thirdName;
-
+    @NotNull(message = "Last name is mandatory")
     @Column(name = "last_name")
     private String lastName;
-
     @Column(name = "phone_number")
     private String phoneNumber;
-
+    @NotNull(message = "Email is mandatory")
+    @Email(message = "Write a Correct Email")
     @Column(name = "email")
     private String email;
-
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     @Column(name = "password")
     private String password;
-
     @Column(name = "country")
     private String country;
-
     @Column(name = "city")
     private String city;
-
     @Column(name = "street")
     private String street;
-
+    @NotNull(message = "Id Number is mandatory")
     @Column(name = "id_number")
     private String idNumber;
-
+    @NotNull(message = "Role is mandatory")
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     private Role role;
-
     @Column(name = "department_id")
     private Integer departmentId;
+    @NotNull(message = "Hiring date is mandatory")
+    @PastOrPresent(message = "Hiring date cannot be in the future")
     @Column(name = "hiring_date")
     private Date hiringDate;
+    @Positive(message = "Salary must be a positive number")
     @Column(name = "salary")
     private Float salary;
 

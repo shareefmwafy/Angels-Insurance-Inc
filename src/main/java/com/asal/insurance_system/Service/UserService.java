@@ -6,6 +6,7 @@ import com.asal.insurance_system.DTO.UserDTO;
 import com.asal.insurance_system.Mapper.UserMapper;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -67,7 +68,7 @@ public class UserService {
             logger.error("User wasn't Added: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new AuthenticationResponse(
-                    "Error occurred while adding user",
+                    "Error occurred while adding user: "+e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR.value()
                 )
             );
@@ -183,6 +184,7 @@ public class UserService {
             }
             User existingUser = optionalUser.get();
             userMapper.mapToUpdatedUser(user,existingUser);
+            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(existingUser);
 
             return ResponseEntity.status(HttpStatus.OK).body(

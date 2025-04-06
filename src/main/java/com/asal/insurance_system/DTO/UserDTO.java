@@ -1,19 +1,30 @@
 package com.asal.insurance_system.DTO;
 
 import com.asal.insurance_system.Enum.Role;
+import jakarta.validation.constraints.*;
 
 import java.util.Date;
 
 public class UserDTO {
 
+    @NotNull(message = "First name is mandatory")
     private String firstName;
+    @NotNull(message = "Last name is mandatory")
     private String lastName;
+    @NotNull(message = "Email is mandatory")
+    @Email(message = "Write a Correct Email")
     private String email;
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+    @NotNull(message = "Id Number is mandatory")
     private String idNumber;
+    @NotNull(message = "Role is mandatory")
     private Role role;
     private Integer departmentId;
+    @NotNull(message = "Hiring date is mandatory")
+    @PastOrPresent(message = "Hiring date cannot be in the future")
     private Date hiringDate;
+    @Positive(message = "Salary must be a positive number")
     private Float salary;
 
 
