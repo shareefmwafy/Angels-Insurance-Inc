@@ -3,9 +3,12 @@ package com.asal.insurance_system.Service;
 
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.CustomerDTO;
+import com.asal.insurance_system.DTO.Response.CustomerWithPoliciesResponse;
 import com.asal.insurance_system.Mapper.CustomerMapper;
 import com.asal.insurance_system.Model.Customer;
+import com.asal.insurance_system.Model.Policy;
 import com.asal.insurance_system.Repository.CustomerRepository;
+import com.asal.insurance_system.Repository.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -130,34 +133,37 @@ public class CustomerService {
 
 
     public ResponseEntity<Object> getCustomerById(Integer customerId) {
-       try {
-           Optional<Customer> customer = customerRepository.findById(customerId);
-           if(customer.isEmpty()){
-               return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                       new ApiResponse(
-                               "Customer Not Found",
-                               HttpStatus.NOT_FOUND.value()
-                       )
-               );
-           }
+        try {
+            Optional<Customer> customerOptional = customerRepository.findById(customerId);
 
-           return ResponseEntity.status(HttpStatus.OK).body(
-                   new ApiResponse(
-                           "Successfully found Customer",
-                           HttpStatus.OK.value(),
-                           customer
-                   )
-           );
-       }
-       catch (Exception e){
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                   new ApiResponse(
-                           "Error While getting Customer: "+e.getMessage(),
-                           HttpStatus.INTERNAL_SERVER_ERROR.value()
-                   )
-           );
-       }
+            if (customerOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ApiResponse(
+                                "Customer Not Found",
+                                HttpStatus.NOT_FOUND.value()
+                        )
+                );
+            }
+
+            Customer customer = customerOptional.get();
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ApiResponse(
+                            "Successfully found Customer with Policies",
+                            HttpStatus.OK.value(),
+                            customer
+                    )
+            );
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ApiResponse(
+                            "Error While getting Customer: " + e.getMessage(),
+                            HttpStatus.INTERNAL_SERVER_ERROR.value()
+                    )
+            );
+        }
     }
+
 
     public ResponseEntity<Object> getAllCustomers() {
         try {
