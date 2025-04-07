@@ -55,7 +55,7 @@ public class PolicyService {
 
         Policy savedPolicy = policyRepository.save(policy);
 
-        logger.info("Policy created successfully with ID: {}", savedPolicy.getPolicyId());
+        logger.info("Policy created successfully with ID: {}", savedPolicy.getId());
 
         return savedPolicy;
     }
@@ -65,7 +65,7 @@ public class PolicyService {
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found with Id " + id));
 
         PolicyResponseDTO responseDTO = new PolicyResponseDTO();
-        responseDTO.setPolicyId(policy.getPolicyId());
+        responseDTO.setPolicyId(policy.getId());
         responseDTO.setPolicyType(EnumPolicyType.valueOf(policy.getPolicyType().toString()));  // Assuming it's an Enum, convert to String
         responseDTO.setPolicyStatus(EnumPolicyStatus.valueOf(policy.getPolicyStatus().toString()));
         responseDTO.setAmount(policy.getAmount());
