@@ -1,9 +1,12 @@
 package com.asal.insurance_system.Controller;
 
+import com.asal.insurance_system.Auth.AuthenticationRequest;
+import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.CustomerDTO;
-import com.asal.insurance_system.Mapper.CustomerMapper;
+import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Service.ApiResponse;
+import com.asal.insurance_system.Service.CancellationRequestService;
 import com.asal.insurance_system.Service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +15,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
     @Autowired
     CustomerService customerService;
+    private final CancellationRequestService cancellationRequestService;
+
+    public CustomerController(CancellationRequestService cancellationRequestService) {
+        this.cancellationRequestService = cancellationRequestService;
+    }
+
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
@@ -55,5 +60,26 @@ public class CustomerController {
         return customerService.updateCustomer(customerId, customer);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Object> customerLogin(@Valid @RequestBody AuthenticationRequest request){
+        return  customerService.customerLogin(request);
+     }
+
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @PostMapping("/request-cancellation/{policyId}")
+    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason) {
+        try {
+            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason);
+            if (!result)
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("You have made this request before.", HttpStatus.CONFLICT.value()));
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Cancellation request sent successfully", HttpStatus.CREATED.value()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while requesting cancellation", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
 
 }

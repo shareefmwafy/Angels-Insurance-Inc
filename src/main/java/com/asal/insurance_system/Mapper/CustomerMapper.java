@@ -14,5 +14,6 @@ public interface CustomerMapper {
     CustomerDTO mapToDto (Customer entity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
     void mapToUpdatedCustomer (Customer source, @MappingTarget Customer target);
 }

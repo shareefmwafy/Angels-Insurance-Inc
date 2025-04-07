@@ -7,36 +7,48 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "customers")
-public class Customer{
+public class Customer implements UserDetails{
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private Integer Id;
+    @Getter
     @NotNull(message = "First name is required")
     @Size(min = 1, max = 50, message = "First name must be between 1 and 50 characters")
     @Column(name = "first_name")
     protected String firstName;
+    @Getter
     @NotNull(message = "Second name is required")
     @Size(min = 1, max = 50, message = "Second name must be between 1 and 50 characters")
     @Column(name = "second_name")
     protected String secondName;
+    @Getter
     @NotNull(message = "Third name is required")
     @Size(min = 1, max = 50, message = "Third name must be between 1 and 50 characters")
     @Column(name= "third_name")
     protected String  thirdName;
+    @Getter
     @NotNull(message = "Last name is required")
     @Size(min = 1, max = 50, message = "Last name must be between 1 and 50 characters")
     @Column(name = "last_name")
     protected String lastName;
+    @Getter
     @NotNull(message = "Phone number is required")
     @Column(name = "phone_number")
     protected String phoneNumber;
+    @Getter
     @NotNull(message = "Email is required")
     @Email(message = "Invalid email format")
     @Column(name = "email")
@@ -69,13 +81,15 @@ public class Customer{
     @Column(name = "claim_history")
     protected String claimHistory;
 
-
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
     @OneToMany(mappedBy = "customer")
     private List<Policy> policies;
 
 
 
-    public Customer(String firstName, String secondName, String thirdName, String lastName, String phoneNumber, String email, String password, String country, String city, String street, String idNumber, EnumPolicyType policyType, String claimHistory) {
+    public Customer(String firstName, String secondName, String thirdName, String lastName, String phoneNumber, String email, String password, String country, String city, String street, String idNumber, EnumPolicyType policyType, String claimHistory, Role role) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.thirdName = thirdName;
@@ -89,13 +103,10 @@ public class Customer{
         this.idNumber = idNumber;
         PolicyType = policyType;
         this.claimHistory = claimHistory;
+        this.role = role;
     }
 
     public Customer (){}
-
-    public List<Policy> getPolicies() {
-        return policies;
-    }
 
     public void setPolicies(List<Policy> policies) {
         this.policies = policies;
@@ -115,64 +126,47 @@ public class Customer{
         return Objects.hash(Id);
     }
 
-    public Integer getId() {
-        return Id;
-    }
-
     public void setId(Integer id) {
         Id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getSecondName() {
-        return secondName;
-    }
-
     public void setSecondName(String secondName) {
         this.secondName = secondName;
-    }
-
-    public String getThirdName() {
-        return thirdName;
     }
 
     public void setThirdName(String thirdName) {
         this.thirdName = thirdName;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     public void setPassword(String password) {
@@ -226,5 +220,13 @@ public class Customer{
 
     public void setClaimHistory(String claimHistory) {
         this.claimHistory = claimHistory;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
