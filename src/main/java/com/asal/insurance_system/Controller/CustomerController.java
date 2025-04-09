@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -68,11 +69,12 @@ public class CustomerController {
 
     @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/request-cancellation/{policyId}")
-    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason) {
+    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason, @AuthenticationPrincipal Customer userDetails) {
         try {
-            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason);
+            Integer customerId = userDetails.getId();
+            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason, customerId);
             if (!result)
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("You have made this request before.", HttpStatus.CONFLICT.value()));
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("you Can't Create this Request now", HttpStatus.CONFLICT.value()));
 
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Cancellation request sent successfully", HttpStatus.CREATED.value()));
         } catch (ResourceNotFoundException e) {

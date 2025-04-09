@@ -2,7 +2,7 @@ package com.asal.insurance_system.Service;
 
 public class ApiResponse<T> {
     private String message;
-    private int statusCode;
+    private int status;
     private T data;
 
     public ApiResponse(){
@@ -10,12 +10,12 @@ public class ApiResponse<T> {
     }
     public ApiResponse(String message, int statusCode) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = statusCode;
     }
 
     public ApiResponse(String message, int statusCode, T data) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = statusCode;
         this.data = data;
     }
 
@@ -28,11 +28,11 @@ public class ApiResponse<T> {
     }
 
     public int getStatusCode() {
-        return statusCode;
+        return status;
     }
 
     public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+        this.status = statusCode;
     }
 
     public T getData() {

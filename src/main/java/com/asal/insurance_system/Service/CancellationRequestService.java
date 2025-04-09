@@ -22,26 +22,28 @@ public class CancellationRequestService {
         this.policyRepository = policyRepository;
     }
 
-    public boolean requestPolicyCancellation(Integer policyId, String reason) {
+    public boolean requestPolicyCancellation(Integer policyId, String reason, Integer customerId) {
         Policy policy = policyRepository.findById(policyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Policy not found"));
+        if(policy.getCustomer().getId() == customerId){
+            Optional<CancellationRequest> cancellationRequestInDb = cancellationRequestRepository.findByPolicyId(policyId);
+            if(cancellationRequestInDb.isPresent()){
+                return false;
+            }
 
-        Optional<CancellationRequest> cancellationRequestInDb = cancellationRequestRepository.findByPolicyId(policyId);
-        if(cancellationRequestInDb.isPresent()){
-            return false;
+            CancellationRequest request = new CancellationRequest();
+            request.setPolicy(policy);
+            request.setReason(reason);
+
+            cancellationRequestRepository.save(request);
+            return true;
         }
-
-        CancellationRequest request = new CancellationRequest();
-        request.setPolicy(policy);
-        request.setReason(reason);
-
-        cancellationRequestRepository.save(request);
-        return true;
+        return false;
     }
 
     public void approveCancellationRequest(Integer requestId) {
         CancellationRequest request = cancellationRequestRepository.findById(requestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("This Policy Request Not Found"));
 
         Policy policy = request.getPolicy();
         policy.setPolicyStatus(EnumPolicyStatus.CANCELED);

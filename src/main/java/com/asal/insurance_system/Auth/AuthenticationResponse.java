@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 public class AuthenticationResponse {
 
     private String message;
-    private int statusCode;
+    private int status;
     private String token;
 
-    public AuthenticationResponse(String message, int statusCode) {
+    public AuthenticationResponse(String message, int status) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public AuthenticationResponse(String message, int statusCode, String token) {
+    public AuthenticationResponse(String message, int status, String token) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = status;
         this.token = token;
     }
 }
