@@ -88,14 +88,25 @@ public class CustomerController {
 
     @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/claim/{customerId}")
-    public ResponseEntity<ClaimResponse> requestClaim(@PathVariable Integer customerId,@RequestBody ClaimRequest ClaimRequest, @AuthenticationPrincipal Customer customerDetails){
+    public ResponseEntity<ApiResponse<ClaimResponse>> requestClaim(@PathVariable Integer customerId, @RequestBody ClaimRequest ClaimRequest, @AuthenticationPrincipal Customer customerDetails){
         Integer customerLoggedInId = customerDetails.getId();
         ClaimResponse claimResponse =customerService.createNewClaim(customerId,ClaimRequest,customerLoggedInId);
 
         if (claimResponse != null){
-            return ResponseEntity.status(HttpStatus.OK).body(claimResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ApiResponse<ClaimResponse>(
+                            "Successfully Created New Claim",
+                            HttpStatus.OK.value(),
+                            claimResponse
+                    )
+            );
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ApiResponse<ClaimResponse>(
+                        "You Can't Reach this Customer id",
+                        HttpStatus.FORBIDDEN.value()
+                )
+        );
     }
 
 }

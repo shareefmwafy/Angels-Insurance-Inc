@@ -61,27 +61,5 @@ public class ClaimResponse {
         this.supportingDocument = supportingDocument;
     }
 
-    public Integer getId() {
-        return Id;
-    }
 
-    public EnumClaimStatus getStatus() {
-        return status;
-    }
-
-    public Float getAmountRequested() {
-        return amountRequested;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Float getAmountApproved() {
-        return amountApproved;
-    }
-
-    public String getSupportingDocument() {
-        return supportingDocument;
-    }
 }
