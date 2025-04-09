@@ -21,8 +21,8 @@ public class RenewalPolicyReminderService {
     @Autowired
     private NotificationRepository notificationRepository;
 
-//    @Scheduled(cron = "*/1 * * * * *")
-    @Scheduled(cron = "0 0 9 * * ?")
+
+    @Scheduled(cron = "${scheduling.cron.dailyNotification}")
     public void generateRenewalNotifications() {
         LocalDate reminderDate = LocalDate.now().plusDays(7);
         List<Policy> expiringPolicies = policyRepository.findByEndDate(reminderDate);

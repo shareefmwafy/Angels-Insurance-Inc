@@ -23,7 +23,7 @@ public class PolicyStatusScheduler {
         this.policyRepository = policyRepository;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "${scheduling.cron.policy-status-update}")
     public void updatePolicyStatuses(){
         LocalDate today = LocalDate.now();
         List<Policy> allPolicies = policyRepository.findAll();
