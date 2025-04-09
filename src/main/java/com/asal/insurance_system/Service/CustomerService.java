@@ -5,14 +5,15 @@ import com.asal.insurance_system.Auth.AuthenticationRequest;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.Configuration.JwtService;
 import com.asal.insurance_system.DTO.CustomerDTO;
-import com.asal.insurance_system.DTO.Response.CustomerWithPoliciesResponse;
+import com.asal.insurance_system.DTO.Request.ClaimRequest;
+import com.asal.insurance_system.DTO.Response.ClaimResponse;
 import com.asal.insurance_system.Enum.Role;
-import com.asal.insurance_system.Exception.ResourceNotFoundException;
+import com.asal.insurance_system.Mapper.ClaimMapper;
 import com.asal.insurance_system.Mapper.CustomerMapper;
+import com.asal.insurance_system.Model.Claim;
 import com.asal.insurance_system.Model.Customer;
-import com.asal.insurance_system.Model.Policy;
+import com.asal.insurance_system.Repository.ClaimRepository;
 import com.asal.insurance_system.Repository.CustomerRepository;
-import com.asal.insurance_system.Repository.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,12 +21,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static com.asal.insurance_system.Enum.EnumClaimStatus.PENDING;
 
 @Slf4j
 @Service
@@ -40,6 +44,9 @@ public class CustomerService {
     private final CustomerMapper customerMapper;
 
     private final JwtService jwtService;
+
+    private final ClaimRepository claimRepository;
+    private final ClaimMapper claimMapper;
 
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
@@ -243,4 +250,18 @@ public class CustomerService {
         }
     }
 
+    public ClaimResponse createNewClaim(Integer customerId, ClaimRequest claimRequest, Integer customerLoggedInId) {
+        Claim claim = claimMapper.mapToEntity(claimRequest);
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(()-> new UsernameNotFoundException("Customer Not Found"));
+        if (customerId == customerLoggedInId) {
+            System.out.println("Claim Request: "+ claimRequest);
+            claim.setStatus(PENDING);
+
+            claim.setCustomer(customer);
+            claimRepository.save(claim);
+            return claimMapper.mapToResponseDto(claim);
+        }
+        return null;
+    }
 }

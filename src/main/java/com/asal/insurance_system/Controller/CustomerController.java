@@ -1,9 +1,11 @@
 package com.asal.insurance_system.Controller;
 
 import com.asal.insurance_system.Auth.AuthenticationRequest;
-import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.DTO.CustomerDTO;
+import com.asal.insurance_system.DTO.Request.ClaimRequest;
+import com.asal.insurance_system.DTO.Response.ClaimResponse;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
+import com.asal.insurance_system.Model.Claim;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Service.ApiResponse;
 import com.asal.insurance_system.Service.CancellationRequestService;
@@ -82,6 +84,18 @@ public class CustomerController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while requesting cancellation", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
+    }
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @PostMapping("/claim/{customerId}")
+    public ResponseEntity<ClaimResponse> requestClaim(@PathVariable Integer customerId,@RequestBody ClaimRequest ClaimRequest, @AuthenticationPrincipal Customer customerDetails){
+        Integer customerLoggedInId = customerDetails.getId();
+        ClaimResponse claimResponse =customerService.createNewClaim(customerId,ClaimRequest,customerLoggedInId);
+
+        if (claimResponse != null){
+            return ResponseEntity.status(HttpStatus.OK).body(claimResponse);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
 }
