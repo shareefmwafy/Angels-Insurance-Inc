@@ -211,4 +211,68 @@ public class Customer implements UserDetails{
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public String getThirdName() {
+        return thirdName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public EnumPolicyType getPolicyType() {
+        return PolicyType;
+    }
+
+    public String getClaimHistory() {
+        return claimHistory;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public List<Policy> getPolicies() {
+        return policies;
+    }
+
+    public List<Accident> getAccidents() {
+        return accidents;
+    }
 }

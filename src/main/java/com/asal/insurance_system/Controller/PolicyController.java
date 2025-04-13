@@ -3,19 +3,25 @@ package com.asal.insurance_system.Controller;
 import com.asal.insurance_system.DTO.Request.PolicyRequestDTO;
 import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
-import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.Policy;
-import com.asal.insurance_system.Service.ApiResponse;
 import com.asal.insurance_system.Service.CancellationRequestService;
+import com.asal.insurance_system.Service.PolicyDocumentService;
 import com.asal.insurance_system.Service.PolicyService;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static com.asal.insurance_system.Exception.ErrorResponseUtil.createErrorResponse;
@@ -24,13 +30,13 @@ import static com.asal.insurance_system.Exception.ErrorResponseUtil.createErrorR
 @RequestMapping("/api/v1/policy")
 public class PolicyController {
     private final PolicyService policyService;
-    private final CancellationRequestService cancellationRequestService;
+    private final PolicyDocumentService policyDocumentService;
 
 
     @Autowired
-    public PolicyController(PolicyService policyService, CancellationRequestService cancellationRequestService){
+    public PolicyController(PolicyService policyService, PolicyDocumentService policyDocumentService){
         this.policyService = policyService;
-        this.cancellationRequestService = cancellationRequestService;
+        this.policyDocumentService = policyDocumentService;
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -102,12 +108,18 @@ public class PolicyController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @GetMapping("/generate/{policyId}")
+    public ResponseEntity<byte[]> generatePolicyDocument(@PathVariable Integer policyId) throws IOException{
+        byte[] pdfContent = policyDocumentService.generatePolicyDocument(policyId);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=policy_document.pdf");
 
-
-
-
-
-
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfContent);
+    }
 
 }

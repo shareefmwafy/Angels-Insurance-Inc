@@ -7,7 +7,6 @@ import com.asal.insurance_system.Enum.EnumClaimStatus;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Service.ApiResponse;
 import com.asal.insurance_system.Service.ClaimsService;
-import io.swagger.annotations.Api;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
