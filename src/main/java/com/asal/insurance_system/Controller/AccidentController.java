@@ -2,8 +2,10 @@ package com.asal.insurance_system.Controller;
 
 
 import com.asal.insurance_system.DTO.Request.AccidentRequest;
+import com.asal.insurance_system.DTO.Response.AccidentResponse;
 import com.asal.insurance_system.Model.Accident;
 import com.asal.insurance_system.Service.AccidentService;
+import com.asal.insurance_system.Service.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,28 +31,41 @@ public class AccidentController {
         return new ResponseEntity<>(accident, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
-    public ResponseEntity<List<Accident>> getAllAccidents() {
-        List<Accident> accidents = accidentService.getAllAccidents();
+    public ResponseEntity<List<AccidentResponse>> getAllAccidents() {
+        List<AccidentResponse> accidents = accidentService.getAllAccidents();
         return new ResponseEntity<>(accidents, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<Accident> getAccidentById(@PathVariable Integer id) {
-        Accident accident = accidentService.getAccidentById(id);
+    public ResponseEntity<ApiResponse<AccidentResponse>> getAccidentById(@PathVariable Integer id) {
+        AccidentResponse accident = accidentService.getAccidentById(id);
         if (accident != null) {
-            return new ResponseEntity<>(accident, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ApiResponse<>(
+                            "Accident Found Successfully",
+                            HttpStatus.OK.value(),
+                            accident
+                    )
+            );
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse<>(
+                            "Accident Not Found",
+                            HttpStatus.NOT_FOUND.value()
+
+                    )
+            );
         }
     }
 
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/{id}/status")
-    public ResponseEntity<Accident> updateAccidentStatus(@PathVariable Integer id, @RequestParam String status) {
-        Accident updatedAccident = accidentService.updateAccidentStatus(id, status);
+    public ResponseEntity<AccidentResponse> updateAccidentStatus(@PathVariable Integer id, @RequestParam String status) {
+        AccidentResponse updatedAccident = accidentService.updateAccidentStatus(id, status);
         if (updatedAccident != null) {
             return new ResponseEntity<>(updatedAccident, HttpStatus.OK);
         } else {

@@ -1,6 +1,7 @@
 package com.asal.insurance_system.DTO.Response;
 
 import com.asal.insurance_system.Enum.AccidentStatus;
+import com.asal.insurance_system.Model.Customer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +17,6 @@ public class AccidentResponse {
     private String description;
     private AccidentStatus status;
     private List<String> documents;
+    private Integer customerId;
 }
 
