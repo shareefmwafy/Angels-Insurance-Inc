@@ -87,6 +87,10 @@ public class Customer implements UserDetails{
     @OneToMany(mappedBy = "customer")
     private List<Policy> policies;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Accident> accidents;
+
+
 
 
     public Customer(String firstName, String secondName, String thirdName, String lastName, String phoneNumber, String email, String password, String country, String city, String street, String idNumber, EnumPolicyType policyType, String claimHistory, Role role) {
@@ -173,32 +177,19 @@ public class Customer implements UserDetails{
         this.password = password;
     }
 
-    public String getCountry() {
-        return country;
-    }
 
     public void setCountry(String country) {
         this.country = country;
     }
 
-    public String getCity() {
-        return city;
-    }
 
     public void setCity(String city) {
         this.city = city;
     }
 
-    public String getStreet() {
-        return street;
-    }
 
     public void setStreet(String street) {
         this.street = street;
-    }
-
-    public String getIdNumber() {
-        return idNumber;
     }
 
     public void setIdNumber(String idNumber) {
@@ -206,25 +197,16 @@ public class Customer implements UserDetails{
     }
 
 
-    public EnumPolicyType getPolicyType() {
-        return PolicyType;
-    }
 
     public void setPolicyType(EnumPolicyType policyType) {
         PolicyType = policyType;
     }
 
-    public String getClaimHistory() {
-        return claimHistory;
-    }
 
     public void setClaimHistory(String claimHistory) {
         this.claimHistory = claimHistory;
     }
 
-    public Role getRole() {
-        return role;
-    }
 
     public void setRole(Role role) {
         this.role = role;

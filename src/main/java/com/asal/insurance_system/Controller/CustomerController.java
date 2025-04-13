@@ -23,12 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
     @Autowired
     CustomerService customerService;
-    private final CancellationRequestService cancellationRequestService;
-
-    public CustomerController(CancellationRequestService cancellationRequestService) {
-        this.cancellationRequestService = cancellationRequestService;
-    }
-
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
@@ -69,44 +63,8 @@ public class CustomerController {
      }
 
 
-    @PreAuthorize("hasRole('CUSTOMER')")
-    @PostMapping("/request-cancellation/{policyId}")
-    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason, @AuthenticationPrincipal Customer userDetails) {
-        try {
-            Integer customerId = userDetails.getId();
-            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason, customerId);
-            if (!result)
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("you Can't Create this Request now", HttpStatus.CONFLICT.value()));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Cancellation request sent successfully", HttpStatus.CREATED.value()));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while requesting cancellation", HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
-    }
 
-    @PreAuthorize("hasRole('CUSTOMER')")
-    @PostMapping("/claim/{customerId}")
-    public ResponseEntity<ApiResponse<ClaimResponse>> requestClaim(@PathVariable Integer customerId, @RequestBody ClaimRequest ClaimRequest, @AuthenticationPrincipal Customer customerDetails){
-        Integer customerLoggedInId = customerDetails.getId();
-        ClaimResponse claimResponse =customerService.createNewClaim(customerId,ClaimRequest,customerLoggedInId);
 
-        if (claimResponse != null){
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ApiResponse<ClaimResponse>(
-                            "Successfully Created New Claim",
-                            HttpStatus.OK.value(),
-                            claimResponse
-                    )
-            );
-        }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                new ApiResponse<ClaimResponse>(
-                        "You Can't Reach this Customer id",
-                        HttpStatus.FORBIDDEN.value()
-                )
-        );
-    }
 
 }

@@ -4,7 +4,9 @@ package com.asal.insurance_system.Model;
 import com.asal.insurance_system.Enum.EnumClaimStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "claims")
@@ -34,6 +36,10 @@ public class Claim {
 
     @Column(name = "supporting_document")
     private String supportingDocument;
+
+    @ManyToOne
+    @JoinColumn(name = "accident_id")
+    private Accident accident;
 
 
     public void setClaimId(Integer claimId) {

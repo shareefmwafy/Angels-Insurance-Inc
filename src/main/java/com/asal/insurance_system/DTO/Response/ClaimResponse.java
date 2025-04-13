@@ -3,6 +3,7 @@ package com.asal.insurance_system.DTO.Response;
 import com.asal.insurance_system.Enum.EnumClaimStatus;
 import com.asal.insurance_system.Model.Customer;
 
+
 public class ClaimResponse {
 
     private Integer Id;

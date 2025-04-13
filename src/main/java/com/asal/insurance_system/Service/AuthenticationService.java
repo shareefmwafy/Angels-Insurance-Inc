@@ -55,6 +55,7 @@ public class AuthenticationService {
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new AuthenticationResponse(
                                 "User Found Successfully",
+                                user.get().getId(),
                                 HttpStatus.OK.value(),
                                 jwtToken
                         )

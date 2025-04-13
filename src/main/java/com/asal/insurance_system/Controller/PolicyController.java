@@ -3,6 +3,7 @@ package com.asal.insurance_system.Controller;
 import com.asal.insurance_system.DTO.Request.PolicyRequestDTO;
 import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
+import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.Policy;
 import com.asal.insurance_system.Service.ApiResponse;
 import com.asal.insurance_system.Service.CancellationRequestService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +24,13 @@ import static com.asal.insurance_system.Exception.ErrorResponseUtil.createErrorR
 @RequestMapping("/api/v1/policy")
 public class PolicyController {
     private final PolicyService policyService;
+    private final CancellationRequestService cancellationRequestService;
+
 
     @Autowired
-    public PolicyController(PolicyService policyService){
+    public PolicyController(PolicyService policyService, CancellationRequestService cancellationRequestService){
         this.policyService = policyService;
+        this.cancellationRequestService = cancellationRequestService;
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

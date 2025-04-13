@@ -59,6 +59,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.CREATED).body(
                 new AuthenticationResponse(
                         "User Created Successfully",
+                    user.getId(),
                     HttpStatus.CREATED.value(),
                     jwtToken
                 )
