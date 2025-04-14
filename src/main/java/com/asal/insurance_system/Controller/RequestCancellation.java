@@ -4,6 +4,7 @@ import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.CancellationRequest;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.DTO.Response.ApiResponse;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Service.CancellationRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,9 @@ public class RequestCancellation {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/approve-cancellation/{requestId}")
-    public ResponseEntity<ApiResponse> approveCancellationRequest(@PathVariable Integer requestId) {
+    public ResponseEntity<ApiResponse> approveCancellationRequest(@PathVariable Integer requestId, @AuthenticationPrincipal User userDetails) {
         try {
-            cancellationRequestService.approveCancellationRequest(requestId);
+            cancellationRequestService.approveCancellationRequest(requestId,userDetails);
             return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Cancellation request approved successfully", HttpStatus.OK.value()));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
@@ -38,20 +39,14 @@ public class RequestCancellation {
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
-    @PostMapping("/request-cancellation/{policyId}")
+    @PostMapping("/{policyId}")
     public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason, @AuthenticationPrincipal Customer userDetails) {
-        try {
-            Integer customerId = userDetails.getId();
-            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason, customerId);
-            if (!result)
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ApiResponse("You cannot cancel someone else's policy.", HttpStatus.CONFLICT.value()));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Cancellation request sent successfully", HttpStatus.CREATED.value()));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while requesting cancellation", HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
+        Integer customerId = userDetails.getId();
+        ApiResponse<CancellationRequest> result = cancellationRequestService.requestPolicyCancellation(policyId, reason, customerId);
+        return ResponseEntity
+                .status(result.getStatusCode())
+                .body(result);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
