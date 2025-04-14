@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 public class AccidentResponse {
-    private Long id;
+    private Integer id;
     private LocalDate accidentDate;
     private String location;
     private String description;

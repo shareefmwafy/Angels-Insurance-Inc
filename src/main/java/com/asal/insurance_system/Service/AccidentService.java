@@ -21,6 +21,8 @@ public class AccidentService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private AuditLogService logService;
     private final AccidentMapper accidentMapper;
 
     @Autowired
@@ -39,7 +41,17 @@ public class AccidentService {
         Customer customer = customerRepository.findById(accidentRequest.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         accident.setCustomer(customer);
-        return accidentRepository.save(accident);
+        accidentRepository.save(accident);
+        logService.logAction(
+                "Create Accident",
+                "Accident",
+                 accident.getId(),
+                "Customer",
+                " ",
+                " ",
+                customer.getId()
+        );
+        return accident;
     }
 
     public List<AccidentResponse> getAllAccidents() {
@@ -57,11 +69,21 @@ public class AccidentService {
     }
 
 
-    public AccidentResponse updateAccidentStatus(Integer id, String status) {
+    public AccidentResponse updateAccidentStatus(Integer id, String status, Integer userId) {
         Accident accident = accidentRepository.findById(id).orElse(null);
 
         if (accident != null) {
+            logService.logAction(
+                    "Update Accident Status",
+                    "Accident",
+                    id,
+                    "User",
+                    String.valueOf(accident.getStatus()),
+                    status,
+                    userId
+            );
             accident.setStatus(AccidentStatus.valueOf(status));
+
             return accidentMapper.mapToAccidentResponse(accidentRepository.save(accident));
         }
         return null;

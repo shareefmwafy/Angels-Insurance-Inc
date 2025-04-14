@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Registered
 public interface AuditLogRepository extends JpaRepository<AuditLog,Integer> {
+    AuditLog findByUserId(Integer userId);
+    AuditLog findByTableName(String tableName);
 }

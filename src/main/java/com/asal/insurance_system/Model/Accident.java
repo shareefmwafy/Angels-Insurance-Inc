@@ -16,7 +16,7 @@ public class Accident {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     private LocalDate accidentDate;
 
@@ -32,12 +32,14 @@ public class Accident {
     @Column(name = "document_url")
     private List<String> documents;
 
-//    @OneToMany(mappedBy = "accident", cascade = CascadeType.ALL)
-//    private List<Claim> claims;
-
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id){
+        this.id = id;
+    }
 }

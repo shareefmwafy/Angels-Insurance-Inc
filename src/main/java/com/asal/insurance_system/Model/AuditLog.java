@@ -21,8 +21,8 @@ public class AuditLog {
     @Column(name = "record_id")
     private Integer recordId;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "user_type")
+    private String userType;
 
     @Column(name = "action_timestamp")
     private LocalDateTime actionTimestamp;
@@ -39,12 +39,12 @@ public class AuditLog {
     public AuditLog() {
     }
 
-    public AuditLog(Integer id, String actionType, String tableName, Integer recordId, String userName, LocalDateTime actionTimestamp) {
+    public AuditLog(Integer id, String actionType, String tableName, Integer recordId, String userType, LocalDateTime actionTimestamp) {
         Id = id;
         this.actionType = actionType;
         this.tableName = tableName;
         this.recordId = recordId;
-        this.userName = userName;
+        this.userType = userType;
         this.actionTimestamp = actionTimestamp;
     }
 
@@ -64,8 +64,8 @@ public class AuditLog {
         this.recordId = recordId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName(String userType) {
+        this.userType = userType;
     }
 
     public void setActionTimestamp(LocalDateTime actionTimestamp) {
