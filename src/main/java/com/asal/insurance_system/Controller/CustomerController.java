@@ -2,20 +2,12 @@ package com.asal.insurance_system.Controller;
 
 import com.asal.insurance_system.Auth.AuthenticationRequest;
 import com.asal.insurance_system.DTO.CustomerDTO;
-import com.asal.insurance_system.DTO.Request.ClaimRequest;
-import com.asal.insurance_system.DTO.Response.ClaimResponse;
-import com.asal.insurance_system.Exception.ResourceNotFoundException;
-import com.asal.insurance_system.Model.Claim;
 import com.asal.insurance_system.Model.Customer;
-import com.asal.insurance_system.Service.ApiResponse;
-import com.asal.insurance_system.Service.CancellationRequestService;
 import com.asal.insurance_system.Service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

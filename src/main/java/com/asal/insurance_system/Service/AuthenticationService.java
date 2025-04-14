@@ -27,61 +27,47 @@ public class AuthenticationService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuditLogService logService;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
 
-    public ResponseEntity<Object> login(AuthenticationRequest authRequest) {
-        try{
-            Optional<User> user = userRepository.findByEmail(authRequest.getEmail());
-            if(user.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new AuthenticationResponse(
-                                "User Not Found",
-                                HttpStatus.NOT_FOUND.value()
-                        )
-                );
+    public AuthenticationResponse login(AuthenticationRequest authRequest) {
+        Optional<User> optionalUser = userRepository.findByEmail(authRequest.getEmail());
 
-            }
-            if(authRequest.getEmail().equals(user.get().getEmail()) &&
-                    passwordEncoder.matches(authRequest.getPassword(),user.get().getPassword())
-            ){
-                logger.info("User Found: {}" , user.get().getEmail());
-
-                var jwtToken = jwtService.generateToken(user.get());
-                logger.info("JWT Token generated successfully");
-
-                return ResponseEntity.status(HttpStatus.OK).body(
-                        new AuthenticationResponse(
-                                "User Found Successfully",
-                                user.get().getId(),
-                                HttpStatus.OK.value(),
-                                jwtToken
-                        )
-                );
-            }
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new AuthenticationResponse(
-                            "Invalid Email or password",
-                            HttpStatus.NOT_FOUND.value()
-                    )
-            );
-
+        if (optionalUser.isEmpty()) {
+            return new AuthenticationResponse("User Not Found", 404);
         }
 
-        catch (Exception e){
-            logger.error("An error occurred during login: {}",e.getMessage());
-            String message = "An error occurred during login: " + e.getMessage();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new AuthenticationResponse(
-                            "User Found Successfully",
-                            HttpStatus.INTERNAL_SERVER_ERROR.value()
-                            )
-            );
+        User user = optionalUser.get();
+
+        if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+            return new AuthenticationResponse("Invalid Email or password", 404);
         }
+
+        String jwtToken = jwtService.generateToken(user);
+
+        logService.logAction(
+                "User Login",
+                " ",
+                null,
+                " ",
+                " ",
+                user.getId(),
+                user.getRole().toString()
+        );
+
+        return new AuthenticationResponse(
+                "User Found Successfully",
+                user.getId(),
+                200,
+                jwtToken
+        );
     }
+
 }
 
 

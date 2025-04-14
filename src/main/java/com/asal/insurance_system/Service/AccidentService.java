@@ -7,12 +7,15 @@ import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Mapper.AccidentMapper;
 import com.asal.insurance_system.Model.Accident;
 import com.asal.insurance_system.Model.Customer;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.AccidentRepository;
 import com.asal.insurance_system.Repository.CustomerRepository;
+import com.asal.insurance_system.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +24,8 @@ public class AccidentService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private AuditLogService logService;
     private final AccidentMapper accidentMapper;
@@ -46,10 +51,10 @@ public class AccidentService {
                 "Create Accident",
                 "Accident",
                  accident.getId(),
-                "Customer",
                 " ",
                 " ",
-                customer.getId()
+                customer.getId(),
+                "Customer"
         );
         return accident;
     }
@@ -71,16 +76,18 @@ public class AccidentService {
 
     public AccidentResponse updateAccidentStatus(Integer id, String status, Integer userId) {
         Accident accident = accidentRepository.findById(id).orElse(null);
+        Optional<User> user = userRepository.findById(userId);
+
 
         if (accident != null) {
             logService.logAction(
                     "Update Accident Status",
                     "Accident",
                     id,
-                    "User",
                     String.valueOf(accident.getStatus()),
                     status,
-                    userId
+                    userId,
+                    user.get().getRole().name()
             );
             accident.setStatus(AccidentStatus.valueOf(status));
 

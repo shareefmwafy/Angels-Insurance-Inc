@@ -64,7 +64,7 @@ public class AuditLog {
         this.recordId = recordId;
     }
 
-    public void setUserName(String userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 

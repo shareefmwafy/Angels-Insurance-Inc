@@ -12,16 +12,16 @@ public class AuditLogService {
     @Autowired
     private AuditLogRepository auditLogRepository;
 
-    public void logAction(String actionType, String tableName, Integer recordId, String userName, String oldValue, String newValue, Integer userId) {
+    public void logAction(String actionType, String tableName, Integer recordId, String oldValue, String newValue, Integer userId, String userType) {
         AuditLog log = new AuditLog();
         log.setActionType(actionType);
         log.setTableName(tableName);
         log.setRecordId(recordId);
-        log.setUserName(userName);
         log.setActionTimestamp(LocalDateTime.now());
         log.setOldValue(oldValue);
         log.setNewValue(newValue);
         log.setUserId(userId);
+        log.setUserType(userType);
         auditLogRepository.save(log);
     }
 }

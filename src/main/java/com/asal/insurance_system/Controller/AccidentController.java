@@ -6,7 +6,7 @@ import com.asal.insurance_system.DTO.Response.AccidentResponse;
 import com.asal.insurance_system.Model.Accident;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Service.AccidentService;
-import com.asal.insurance_system.Service.ApiResponse;
+import com.asal.insurance_system.DTO.Response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

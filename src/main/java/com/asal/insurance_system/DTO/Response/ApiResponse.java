@@ -1,4 +1,4 @@
-package com.asal.insurance_system.Service;
+package com.asal.insurance_system.DTO.Response;
 
 public class ApiResponse<T> {
     private String message;

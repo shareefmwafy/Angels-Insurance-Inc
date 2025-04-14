@@ -1,11 +1,10 @@
 package com.asal.insurance_system.Controller;
 
 import com.asal.insurance_system.DTO.Response.NotificationResponse;
-import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.Notification;
 import com.asal.insurance_system.Repository.NotificationRepository;
-import com.asal.insurance_system.Service.ApiResponse;
+import com.asal.insurance_system.DTO.Response.ApiResponse;
 import com.asal.insurance_system.Service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
