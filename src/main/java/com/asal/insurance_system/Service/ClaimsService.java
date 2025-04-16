@@ -8,6 +8,7 @@ import com.asal.insurance_system.Mapper.ClaimMapper;
 import com.asal.insurance_system.Model.Accident;
 import com.asal.insurance_system.Model.Claim;
 import com.asal.insurance_system.Model.Customer;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.AccidentRepository;
 import com.asal.insurance_system.Repository.ClaimRepository;
 import com.asal.insurance_system.Repository.CustomerRepository;
@@ -25,12 +26,15 @@ public class ClaimsService {
     private final CustomerRepository customerRepository;
     private final AccidentRepository accidentRepository;
 
+    private final AuditLogService logService;
 
-    public ClaimsService(ClaimRepository claimRepository, ClaimMapper claimMapper, CustomerRepository customerRepository, AccidentRepository accidentRepository){
+
+    public ClaimsService(ClaimRepository claimRepository, ClaimMapper claimMapper, CustomerRepository customerRepository, AccidentRepository accidentRepository, AuditLogService logService){
         this.claimMapper = claimMapper;
         this.claimRepository = claimRepository;
         this.customerRepository = customerRepository;
         this.accidentRepository = accidentRepository;
+        this.logService = logService;
     }
 
     public ClaimResponse createNewClaim(Integer customerId, ClaimRequest claimRequest, Integer customerLoggedInId) {
@@ -48,6 +52,16 @@ public class ClaimsService {
         claim.setStatus(EnumClaimStatus.PENDING);
         claim.setAccident(accident);
         claimRepository.save(claim);
+
+        logService.logAction(
+                "Create New Claim",
+                "Claims",
+                claim.getId(),
+                "",
+                "",
+                customerId,
+                customer.getRole().name()
+        );
         return claimMapper.mapToResponseDto(claim);
     }
 
@@ -57,7 +71,7 @@ public class ClaimsService {
                 .map(claimMapper::mapToResponseDto)
                 .collect(Collectors.toList());
     }
-    public ClaimResponse updateClaimStatus(Integer claimId, ClaimStatusRequest claimStatusRequest){
+    public ClaimResponse updateClaimStatus(Integer claimId, ClaimStatusRequest claimStatusRequest, User userDetails){
         Claim claim = claimRepository.findById(claimId)
                 .orElseThrow(()-> new RuntimeException("Claim Not Found"));
 
@@ -70,10 +84,21 @@ public class ClaimsService {
         if (claim.getStatus() == EnumClaimStatus.COMPLETED || claim.getStatus() == EnumClaimStatus.REJECTED) {
             throw new IllegalStateException("Cannot update claim status as it's already finalized.");
         }
-
+        String oldStatusClaim = claim.getStatus().name();
         claim.setStatus(statusEnum);
         claim.setAmountApproved(claimStatusRequest.getAmountApproved());
         claimRepository.save(claim);
+
+        logService.logAction(
+                "Update Claim Status",
+                "Claims",
+                claim.getId(),
+                oldStatusClaim,
+                statusEnum.name(),
+                userDetails.getId(),
+                userDetails.getRole().name()
+        );
+
         return claimMapper.mapToResponseDto(claim);
     }
 }

@@ -5,6 +5,7 @@ import com.asal.insurance_system.DTO.Request.ClaimStatusRequest;
 import com.asal.insurance_system.DTO.Response.ClaimResponse;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.DTO.Response.ApiResponse;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Service.ClaimsService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -74,9 +75,11 @@ public class ClaimsController {
     @PatchMapping("/status/{claimId}")
     public ResponseEntity<ApiResponse<ClaimResponse>> updateClaimStatus(
             @PathVariable Integer claimId,
-            @RequestBody ClaimStatusRequest claimStatusRequest){
+            @RequestBody ClaimStatusRequest claimStatusRequest,
+            @AuthenticationPrincipal User userDetails
+    ){
         try{
-            ClaimResponse claimResponse = claimsService.updateClaimStatus(claimId, claimStatusRequest);
+            ClaimResponse claimResponse = claimsService.updateClaimStatus(claimId, claimStatusRequest, userDetails);
             return ResponseEntity.ok(
                     new ApiResponse<>(
                             "Claim status updated successfully",
