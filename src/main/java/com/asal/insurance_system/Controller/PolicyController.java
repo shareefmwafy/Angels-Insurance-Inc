@@ -43,9 +43,9 @@ public class PolicyController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PostMapping("")
-    public ResponseEntity<?> createPolicy(@Valid @RequestBody PolicyRequestDTO dto){
+    public ResponseEntity<?> createPolicy(@Valid @RequestBody PolicyRequestDTO dto, @AuthenticationPrincipal User userDetails){
         try {
-            Policy newPolicy = policyService.createPolicy(dto);
+            Policy newPolicy = policyService.createPolicy(dto, userDetails);
             return new ResponseEntity<>(newPolicy, HttpStatus.CREATED);
         } catch (ResourceNotFoundException ex) {
 
@@ -99,9 +99,9 @@ public class PolicyController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deletePolicy(@PathVariable Integer id) {
+    public ResponseEntity<?> deletePolicy(@PathVariable Integer id, @AuthenticationPrincipal User userDetails) {
         try {
-            boolean policy = policyService.deletePolicy(id);
+            boolean policy = policyService.deletePolicy(id, userDetails);
             return new ResponseEntity<>(policy, HttpStatus.NO_CONTENT);
         } catch (ResourceNotFoundException ex) {
             return new ResponseEntity<>(createErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);

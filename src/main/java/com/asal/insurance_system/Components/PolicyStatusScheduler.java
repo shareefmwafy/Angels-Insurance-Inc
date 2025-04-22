@@ -33,9 +33,9 @@ public class PolicyStatusScheduler {
             if(policy.getEndDate().isBefore(today) && policy.getPolicyStatus() == EnumPolicyStatus.ACTIVE){
                 policy.setPolicyStatus(EnumPolicyStatus.EXPIRED);
                 policyRepository.save(policy);
-                logger.info("Policy ID " + policy.getId() + " has been marked as EXPIRED");
+                logger.info("Policy ID " + policy.getPolicyId() + " has been marked as EXPIRED");
             }
-            System.out.println("Policy ID: " + policy.getId());
+            System.out.println("Policy ID: " + policy.getPolicyId());
             System.out.println("EndDate: " + policy.getEndDate());
             System.out.println("Today: " + today);
             System.out.println("Status: " + policy.getPolicyStatus());

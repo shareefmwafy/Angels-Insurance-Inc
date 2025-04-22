@@ -31,7 +31,7 @@ public class RenewalPolicyReminderService {
             Customer customer = policy.getCustomer();
             Notification notification = new Notification();
             notification.setTitle("Policy Renewal Reminder");
-            notification.setMessage("Your policy #" + policy.getId() +
+            notification.setMessage("Your policy #" + policy.getPolicyId() +
                     " will expire on " + policy.getEndDate() + ". Please renew it.");
             notification.setCustomer(customer);
             notificationRepository.save(notification);
