@@ -4,6 +4,7 @@ import com.asal.insurance_system.DTO.Request.PolicyRequestDTO;
 import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.Policy;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Service.CancellationRequestService;
 import com.asal.insurance_system.Service.PolicyDocumentService;
 import com.asal.insurance_system.Service.PolicyService;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
@@ -110,8 +112,8 @@ public class PolicyController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/generate/{policyId}")
-    public ResponseEntity<byte[]> generatePolicyDocument(@PathVariable Integer policyId) throws IOException{
-        byte[] pdfContent = policyDocumentService.generatePolicyDocument(policyId);
+    public ResponseEntity<byte[]> generatePolicyDocument(@PathVariable Integer policyId, @AuthenticationPrincipal User userDetails) throws IOException{
+        byte[] pdfContent = policyDocumentService.generatePolicyDocument(policyId,userDetails);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=policy_document.pdf");
