@@ -9,7 +9,6 @@ import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Service.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,8 +21,12 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-    @Autowired
-    CustomerService customerService;
+
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
@@ -31,7 +34,7 @@ public class CustomerController {
         List<CustomerResponse> customers = customerService.getAllCustomers();
 
         return ResponseEntity.status(HttpStatus.OK).body(
-            new ApiResponse<List<CustomerResponse>>(
+            new ApiResponse<>(
             "All Customers",
                 HttpStatus.OK.value(),
                 customers
@@ -42,35 +45,14 @@ public class CustomerController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping(path = "/customer/{customer-id}")
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomer(@PathVariable("customer-id") Integer customerId){
-       try {
-           CustomerResponse customerResponse =customerService.getCustomerById(customerId);
-           return ResponseEntity.status(HttpStatus.OK).body(
-                   new ApiResponse<>(
-                           "Customer Found Successfully",
-                           HttpStatus.OK.value(),
-                           customerResponse
-                   )
-           );
-       }
-       catch (ResourceNotFoundException ex){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                   new ApiResponse<>(
-                           ex.getMessage(),
-                           HttpStatus.NOT_FOUND.value()
-                   )
-           );
-       }
-       catch (Exception ex){
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                   new ApiResponse<>(
-                           "Error While Adding Customer",
-                           HttpStatus.INTERNAL_SERVER_ERROR.value()
-                   )
-           );
-       }
-
-
-
+       CustomerResponse customerResponse =customerService.getCustomerById(customerId);
+       return ResponseEntity.status(HttpStatus.OK).body(
+           new ApiResponse<>(
+               "Customer Found Successfully",
+               HttpStatus.OK.value(),
+               customerResponse
+           )
+       );
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -79,34 +61,15 @@ public class CustomerController {
             @Valid @RequestBody CustomerRequest customerRequest,
             @AuthenticationPrincipal User userDetails
             )
-
     {
-        try {
-            CustomerResponse customerResponse = customerService.addCustomer(customerRequest,userDetails);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    new ApiResponse<>(
-                            "Customer Created Successfully",
-                            HttpStatus.CREATED.value(),
-                            customerResponse
-                    )
-            );
-        }
-        catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    new ApiResponse<>(
-                            ex.getMessage(),
-                            HttpStatus.CONFLICT.value()
-                    )
-            );
-        }
-        catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ApiResponse<>(
-                            "Error While Adding Customer",
-                            HttpStatus.INTERNAL_SERVER_ERROR.value()
-                    )
-            );
-        }
+        CustomerResponse customerResponse = customerService.addCustomer(customerRequest,userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            new ApiResponse<>(
+                "Customer Created Successfully",
+                HttpStatus.CREATED.value(),
+                customerResponse
+            )
+        );
     }
 
 
@@ -120,18 +83,17 @@ public class CustomerController {
         boolean result =  customerService.deleteCustomerById(customerId,userDetails);
         if (result){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    new ApiResponse<>(
-                            "User Deleted Successfully",
-                            HttpStatus.NO_CONTENT.value()
-                    )
+                new ApiResponse<>(
+                    "User Deleted Successfully",
+                    HttpStatus.NO_CONTENT.value()
+                )
             );
         }
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ApiResponse<>(
-                        "User Not Found",
-                        HttpStatus.NOT_FOUND.value()
-                )
+            new ApiResponse<>(
+                "User Not Found",
+                HttpStatus.NOT_FOUND.value()
+            )
         );
     }
 
@@ -166,7 +128,6 @@ public class CustomerController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> customerLogin(@Valid @RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = customerService.customerLogin(request);
-
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
