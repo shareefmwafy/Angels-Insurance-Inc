@@ -39,13 +39,10 @@ public class NotificationController {
         boolean result = notificationService.readNotification(notificationId,loggedInCustomerId);
         if (result){
             return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<Notification>(
-                    "this notification was read",
-                    HttpStatus.OK.value()
+                "this notification was read",
+                HttpStatus.OK.value()
             ));
         }
-
-
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
     }
 }
