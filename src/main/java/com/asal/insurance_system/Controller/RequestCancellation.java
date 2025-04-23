@@ -1,5 +1,6 @@
 package com.asal.insurance_system.Controller;
 
+import com.asal.insurance_system.DTO.Request.PolicyCancellationReason;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.CancellationRequest;
 import com.asal.insurance_system.Model.Customer;
@@ -40,10 +41,10 @@ public class RequestCancellation {
 
     @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/{policyId}")
-    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason, @AuthenticationPrincipal Customer userDetails) {
+    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody PolicyCancellationReason reason, @AuthenticationPrincipal Customer userDetails) {
 
         Integer customerId = userDetails.getId();
-        ApiResponse<CancellationRequest> result = cancellationRequestService.requestPolicyCancellation(policyId, reason, customerId);
+        ApiResponse<CancellationRequest> result = cancellationRequestService.requestPolicyCancellation(policyId, reason.getReason(), customerId);
         return ResponseEntity
                 .status(result.getStatusCode())
                 .body(result);
