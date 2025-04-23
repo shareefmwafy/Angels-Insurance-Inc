@@ -1,21 +1,21 @@
-package com.asal.insurance_system.Service;
+package com.asal.insurance_system.DTO.Response;
 
-public class ApiResponse {
+public class ApiResponse<T> {
     private String message;
-    private int statusCode;
-    private Object data;
+    private int status;
+    private T data;
 
     public ApiResponse(){
 
     }
     public ApiResponse(String message, int statusCode) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = statusCode;
     }
 
-    public ApiResponse(String message, int statusCode, Object data) {
+    public ApiResponse(String message, int statusCode, T data) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = statusCode;
         this.data = data;
     }
 
@@ -28,18 +28,18 @@ public class ApiResponse {
     }
 
     public int getStatusCode() {
-        return statusCode;
+        return status;
     }
 
     public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
+        this.status = statusCode;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

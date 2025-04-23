@@ -47,4 +47,6 @@ public class UserManagementController {
     public ResponseEntity<Object> updateUser(@PathVariable("userId") Integer userId,@Valid @RequestBody User user){
         return userService.updateUser(userId, user);
     }
+
+
 }

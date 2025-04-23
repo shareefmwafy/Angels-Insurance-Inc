@@ -26,10 +26,25 @@ spring:
 #  create-drop – similar to create, with the addition that Hibernate will drop the database after all operations are completed. Typically used for unit testing
 #  validate – Hibernate only validates whether the tables and columns exist, otherwise it throws an exception
 #  none – this value effectively turns off the DDL generation
-
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 
 server:
   port: 8088
 
 jwt:
   secret: 7D3B8F1C5A9E3B0E4A1C8B7FBB5D2A3E1F9C4A8B2E1D7E7B1A3C5E8F9A7D4E3C
+  token:
+    expiration: 86400000 # 1 day in milliseconds
+
+scheduling:
+  cron:
+    dailyNotification: "0 0 9 * * ?" # daily Notification at 9:00
+    policy-status-update: "0 0 0 * * ?"
+
+# swagger-ui custom path
+spring-doc:
+  swagger-ui.path: /swagger-ui.html
