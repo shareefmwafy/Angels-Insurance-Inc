@@ -25,18 +25,11 @@ public class RequestCancellation {
         this.cancellationRequestService = cancellationRequestService;
     }
 
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/approve-cancellation/{requestId}")
     public ResponseEntity<ApiResponse> approveCancellationRequest(@PathVariable Integer requestId, @AuthenticationPrincipal User userDetails) {
-        try {
-            cancellationRequestService.approveCancellationRequest(requestId,userDetails);
-            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Cancellation request approved successfully", HttpStatus.OK.value()));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while approving cancellation request", HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
+        cancellationRequestService.approveCancellationRequest(requestId,userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Cancellation request approved successfully", HttpStatus.OK.value()));
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -53,12 +46,8 @@ public class RequestCancellation {
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("")
     public ResponseEntity<ApiResponse> getAllCancellationRequests() {
-        try {
-            List<CancellationRequest> requests = cancellationRequestService.getAllCancellationRequests();
-            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Cancellation requests fetched successfully", HttpStatus.OK.value(), requests));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while fetching cancellation requests", HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
+        List<CancellationRequest> requests = cancellationRequestService.getAllCancellationRequests();
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Cancellation requests fetched successfully", HttpStatus.OK.value(), requests));
     }
 
 }
