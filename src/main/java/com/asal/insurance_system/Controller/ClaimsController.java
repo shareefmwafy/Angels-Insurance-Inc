@@ -31,11 +31,11 @@ public class ClaimsController {
     @PostMapping("/{customerId}")
     public ResponseEntity<ApiResponse<ClaimResponse>> requestClaim(
             @PathVariable Integer customerId,
-            @Valid @RequestBody ClaimRequest ClaimRequest,
+            @Valid @RequestBody ClaimRequest claimRequest,
             @AuthenticationPrincipal Customer customerDetails){
 
         Integer customerLoggedInId = customerDetails.getId();
-        ClaimResponse claimResponse =claimsService.createNewClaim(customerId,ClaimRequest,customerLoggedInId);
+        ClaimResponse claimResponse =claimsService.createNewClaim(customerId,claimRequest,customerLoggedInId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ApiResponse<>(
@@ -47,7 +47,7 @@ public class ClaimsController {
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
-    @GetMapping("/customerId")
+    @GetMapping("/{customerId}")
     public ResponseEntity<ApiResponse<List<ClaimResponse>>> getClaimsByCustomer(
             @PathVariable Integer customerId,
             @AuthenticationPrincipal Customer customerDetails){
@@ -78,24 +78,14 @@ public class ClaimsController {
             @RequestBody ClaimStatusRequest claimStatusRequest,
             @AuthenticationPrincipal User userDetails
     ){
-        try{
-            ClaimResponse claimResponse = claimsService.updateClaimStatus(claimId, claimStatusRequest, userDetails);
-            return ResponseEntity.ok(
-                    new ApiResponse<>(
-                            "Claim status updated successfully",
-                            HttpStatus.OK.value(),
-                            claimResponse
-                    )
-            );
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(
-                    new ApiResponse<>(
-                            "Invalid claim status value: "+e.getMessage() ,
-                            HttpStatus.BAD_REQUEST.value(),
-                            null
-                    )
-            );
-        }
+        ClaimResponse claimResponse = claimsService.updateClaimStatus(claimId, claimStatusRequest, userDetails);
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        "Claim status updated successfully",
+                        HttpStatus.OK.value(),
+                        claimResponse
+                )
+        );
     }
 
 }
