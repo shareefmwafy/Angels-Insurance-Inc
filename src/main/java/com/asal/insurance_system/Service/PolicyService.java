@@ -9,6 +9,7 @@ import com.asal.insurance_system.Model.Policy;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.CustomerRepository;
 import com.asal.insurance_system.Repository.PolicyRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,20 +21,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PolicyService {
 
     private final PolicyRepository policyRepository;
     private final CustomerRepository customerRepository;
     private final PolicyMapper policyMapper;
     private final AuditLogService logService;
-
-    @Autowired
-    public PolicyService(PolicyRepository policyRepository, CustomerRepository customerRepository, PolicyMapper policyMapper, AuditLogService logService) {
-        this.policyRepository = policyRepository;
-        this.customerRepository = customerRepository;
-        this.policyMapper = policyMapper;
-        this.logService = logService;
-    }
 
     public Policy createPolicy(PolicyRequestDTO dto, User userDetails) {
         log.info("Attempting to create policy for customerId: {}", dto.getCustomerId());

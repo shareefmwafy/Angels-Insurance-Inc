@@ -12,6 +12,7 @@ import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.AccidentRepository;
 import com.asal.insurance_system.Repository.ClaimRepository;
 import com.asal.insurance_system.Repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +20,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ClaimsService {
+
     private final ClaimRepository claimRepository;
     private final ClaimMapper claimMapper;
     private final CustomerRepository customerRepository;
     private final AccidentRepository accidentRepository;
     private final AuditLogService logService;
-
-
-    public ClaimsService(ClaimRepository claimRepository, ClaimMapper claimMapper, CustomerRepository customerRepository, AccidentRepository accidentRepository, AuditLogService logService){
-        this.claimMapper = claimMapper;
-        this.claimRepository = claimRepository;
-        this.customerRepository = customerRepository;
-        this.accidentRepository = accidentRepository;
-        this.logService = logService;
-    }
 
     public ClaimResponse createNewClaim(Integer customerId, ClaimRequest claimRequest, Integer customerLoggedInId) {
         if (!customerId.equals(customerLoggedInId)) {

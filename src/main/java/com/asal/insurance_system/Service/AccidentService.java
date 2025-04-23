@@ -10,6 +10,7 @@ import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.AccidentRepository;
 import com.asal.insurance_system.Repository.CustomerRepository;
 import com.asal.insurance_system.Repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,20 +18,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AccidentService {
     private final AccidentRepository accidentRepository;
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final AuditLogService logService;
     private final AccidentMapper accidentMapper;
-
-    public AccidentService(AccidentRepository accidentRepository, CustomerRepository customerRepository, UserRepository userRepository, AuditLogService logService, AccidentMapper accidentMapper) {
-        this.accidentRepository = accidentRepository;
-        this.customerRepository = customerRepository;
-        this.userRepository = userRepository;
-        this.logService = logService;
-        this.accidentMapper = accidentMapper;
-    }
 
     public Accident createAccident(AccidentRequest accidentRequest) {
         Accident accident = new Accident();

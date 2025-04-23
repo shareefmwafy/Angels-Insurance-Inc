@@ -9,6 +9,7 @@ import com.asal.insurance_system.Model.Policy;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.CancellationRequestRepository;
 import com.asal.insurance_system.Repository.PolicyRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +19,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CancellationRequestService {
+
     private final CancellationRequestRepository cancellationRequestRepository;
     private final PolicyRepository policyRepository;
-
     private final AuditLogService logService;
-
-    public CancellationRequestService(CancellationRequestRepository cancellationRequestRepository, PolicyRepository policyRepository, AuditLogService logService) {
-        this.cancellationRequestRepository = cancellationRequestRepository;
-        this.policyRepository = policyRepository;
-        this.logService = logService;
-    }
 
     public ApiResponse<CancellationRequest> requestPolicyCancellation(Integer policyId, String reason, Integer customerId) {
         Policy policy = policyRepository.findById(policyId)

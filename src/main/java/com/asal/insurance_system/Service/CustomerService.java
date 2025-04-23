@@ -12,6 +12,7 @@ import com.asal.insurance_system.Mapper.CustomerMapper;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
@@ -34,13 +36,6 @@ public class CustomerService {
     private final JwtService jwtService;
     private final AuditLogService logService;
 
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, CustomerMapper customerMapper, JwtService jwtService, AuditLogService logService) {
-        this.customerRepository = customerRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.customerMapper = customerMapper;
-        this.jwtService = jwtService;
-        this.logService = logService;
-    }
 
     public CustomerResponse updateCustomer(Integer customerId, CustomerRequest customerRequest, User userDetails) {
         Customer customerInDb = customerRepository.findById(customerId)

@@ -21,20 +21,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-
+@RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuditLogService logService;
     private final JwtService jwtService;
-
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuditLogService logService, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.logService = logService;
-        this.jwtService = jwtService;
-    }
-
 
     public AuthenticationResponse login(AuthenticationRequest authRequest) {
         Optional<User> optionalUser = userRepository.findByEmail(authRequest.getEmail());
