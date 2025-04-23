@@ -107,7 +107,7 @@ public class CustomerService {
 
     public CustomerResponse getCustomerById(Integer customerId) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(()-> new ResourceNotFoundException("Customer Not Found"));
+                .orElseThrow(()-> new UsernameNotFoundException("Customer Not Found"));
 
         return customerMapper.mapToCustomerResponse(customer);
     }

@@ -57,7 +57,7 @@ public class AccidentService {
 
     public AccidentResponse getAccidentById(Integer id) {
         Accident accident = accidentRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Accident Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Accident Not Found"));
         return accidentMapper.mapToAccidentResponse(accident);
     }
 

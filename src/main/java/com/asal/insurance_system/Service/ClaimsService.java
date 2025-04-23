@@ -4,6 +4,7 @@ import com.asal.insurance_system.DTO.Request.ClaimRequest;
 import com.asal.insurance_system.DTO.Request.ClaimStatusRequest;
 import com.asal.insurance_system.DTO.Response.ClaimResponse;
 import com.asal.insurance_system.Enum.EnumClaimStatus;
+import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Mapper.ClaimMapper;
 import com.asal.insurance_system.Model.Accident;
 import com.asal.insurance_system.Model.Claim;
@@ -38,7 +39,7 @@ public class ClaimsService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(()-> new UsernameNotFoundException("Customer Not Found"));
         Accident accident = accidentRepository.findById(claimRequest.getAccidentId())
-                        .orElseThrow(()-> new RuntimeException("Accident Not Found"));
+                        .orElseThrow(()-> new ResourceNotFoundException("Accident Not Found"));
 
         claim.setCustomer(customer);
         claim.setStatus(EnumClaimStatus.PENDING);
@@ -65,16 +66,13 @@ public class ClaimsService {
     }
     public ClaimResponse updateClaimStatus(Integer claimId, ClaimStatusRequest claimStatusRequest, User userDetails){
         Claim claim = claimRepository.findById(claimId)
-                .orElseThrow(()-> new RuntimeException("Claim Not Found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Claim Not Found"));
 
         EnumClaimStatus statusEnum;
         try {
             statusEnum = EnumClaimStatus.valueOf(claimStatusRequest.getStatus());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid claim status value");
-        }
-        if (claim.getStatus() == EnumClaimStatus.COMPLETED || claim.getStatus() == EnumClaimStatus.REJECTED) {
-            throw new IllegalStateException("Cannot update claim status as it's already finalized.");
         }
         String oldStatusClaim = claim.getStatus().name();
         claim.setStatus(statusEnum);
