@@ -3,7 +3,6 @@ import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +11,6 @@ import java.util.Date;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-@NoArgsConstructor
 @Getter
 @Entity
 @Table(name = "users")

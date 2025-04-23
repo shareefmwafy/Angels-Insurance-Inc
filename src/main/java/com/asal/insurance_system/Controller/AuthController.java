@@ -20,18 +20,12 @@ public class AuthController {
 
     @PostMapping(path = "/authenticate")
     public ResponseEntity<AuthenticationResponse> auth(@Valid @RequestBody AuthenticationRequest authRequest) {
-        try {
             AuthenticationResponse response = authenticationService.login(authRequest);
-
-            if (response.getStatus() == 200) {
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new AuthenticationResponse("Server error: " + e.getMessage(), 500)
-            );
+        if (response.getStatus() == 200) {
+            return ResponseEntity.ok(response);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
