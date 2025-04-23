@@ -1,11 +1,15 @@
 package com.asal.insurance_system.Exception;
+import com.asal.insurance_system.DTO.Response.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +51,15 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        ApiResponse response = new ApiResponse(
+                "Access Denied: You don't have permission to access this resource.",
+                HttpStatus.FORBIDDEN.value()
+        );
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
 
     private Map<String, Object> buildErrorResponse(HttpStatus status, String message) {
         Map<String, Object> errorResponse = new HashMap<>();
