@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class NotificationService {
-    @Autowired
     private final NotificationRepository notificationRepository;
-
-    @Autowired
     private final NotificationMapper notificationMapper;
 
     public NotificationService(NotificationRepository notificationRepository, NotificationMapper notificationMapper) {

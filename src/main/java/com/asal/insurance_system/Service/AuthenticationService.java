@@ -21,18 +21,19 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class AuthenticationService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AuditLogService logService;
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+public class AuthenticationService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuditLogService logService;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuditLogService logService, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
+        this.jwtService = jwtService;
+    }
 
 
     public AuthenticationResponse login(AuthenticationRequest authRequest) {

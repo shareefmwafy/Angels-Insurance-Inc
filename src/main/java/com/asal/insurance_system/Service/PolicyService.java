@@ -2,8 +2,6 @@ package com.asal.insurance_system.Service;
 
 import com.asal.insurance_system.DTO.Request.PolicyRequestDTO;
 import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
-import com.asal.insurance_system.Enum.EnumPolicyStatus;
-import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Mapper.PolicyMapper;
 import com.asal.insurance_system.Model.Customer;
@@ -24,41 +22,36 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PolicyService {
 
-    @Autowired
     private final PolicyRepository policyRepository;
     private final CustomerRepository customerRepository;
+    private final PolicyMapper policyMapper;
+    private final AuditLogService logService;
 
     @Autowired
-    private PolicyMapper policyMapper;
-
-    private static final Logger logger = LoggerFactory.getLogger(PolicyService.class);
-
-    @Autowired
-    private AuditLogService logService;
-
-    @Autowired
-    public PolicyService(PolicyRepository policyRepository, CustomerRepository customerRepository) {
+    public PolicyService(PolicyRepository policyRepository, CustomerRepository customerRepository, PolicyMapper policyMapper, AuditLogService logService) {
         this.policyRepository = policyRepository;
         this.customerRepository = customerRepository;
+        this.policyMapper = policyMapper;
+        this.logService = logService;
     }
 
     public Policy createPolicy(PolicyRequestDTO dto, User userDetails) {
-        logger.info("Attempting to create policy for customerId: {}", dto.getCustomerId());
+        log.info("Attempting to create policy for customerId: {}", dto.getCustomerId());
 
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> {
-                    logger.error("Customer not found with ID: {}", dto.getCustomerId());
+                    log.error("Customer not found with ID: {}", dto.getCustomerId());
                     return new ResourceNotFoundException("Customer not found with ID " + dto.getCustomerId());
                 });
 
-        logger.info("Found customer: {} {}", customer.getFirstName(), customer.getLastName());
+        log.info("Found customer: {} {}", customer.getFirstName(), customer.getLastName());
 
         Policy policy = new Policy();
         policyMapper.policyToRequestDto(dto,policy);
 
         Policy savedPolicy = policyRepository.save(policy);
 
-        logger.info("Policy created successfully with ID: {}", savedPolicy.getPolicyId());
+        log.info("Policy created successfully with ID: {}", savedPolicy.getPolicyId());
         logService.logAction(
                 "Create New Policy",
                 "Policy",

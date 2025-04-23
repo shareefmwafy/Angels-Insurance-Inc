@@ -22,10 +22,8 @@ import java.util.stream.Collectors;
 public class ClaimsService {
     private final ClaimRepository claimRepository;
     private final ClaimMapper claimMapper;
-
     private final CustomerRepository customerRepository;
     private final AccidentRepository accidentRepository;
-
     private final AuditLogService logService;
 
 

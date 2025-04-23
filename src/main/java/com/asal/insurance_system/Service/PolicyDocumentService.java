@@ -12,7 +12,6 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.element.Table;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -22,12 +21,10 @@ import java.util.Optional;
 @Service
 public class PolicyDocumentService {
     private final PolicyRepository policyRepository;
-
-    @Autowired
-    private AuditLogService logService;
-
-    public PolicyDocumentService(PolicyRepository policyRepository) {
+    private final AuditLogService logService;
+    public PolicyDocumentService(PolicyRepository policyRepository, AuditLogService logService) {
         this.policyRepository = policyRepository;
+        this.logService = logService;
     }
 
     public byte[] generatePolicyDocument(Integer policyId, User userDetails) throws IOException {

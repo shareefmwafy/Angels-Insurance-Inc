@@ -23,16 +23,18 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final JwtService jwtService;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+        this.jwtService = jwtService;
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> addUser(UserDTO userDTO)
@@ -53,8 +55,8 @@ public class UserService {
             userRepository.save(user);
 
             var jwtToken = jwtService.generateToken(user);
-            logger.info("JWT Token generated successfully");
-            logger.info("Successfully Created new user with Role: "+ user.getRole());
+            log.info("JWT Token generated successfully");
+            log.info("Successfully Created new user with Role: "+ user.getRole());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(
                 new AuthenticationResponse(
@@ -66,7 +68,7 @@ public class UserService {
             );
         }
         catch (Exception e){
-            logger.error("User wasn't Added: {}", e.getMessage());
+            log.error("User wasn't Added: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new AuthenticationResponse(
                     "Error occurred while adding user: "+e.getMessage(),
