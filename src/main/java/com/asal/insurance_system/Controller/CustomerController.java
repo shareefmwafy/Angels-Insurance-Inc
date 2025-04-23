@@ -72,7 +72,6 @@ public class CustomerController {
         );
     }
 
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @DeleteMapping(path = "/customer/{customer-id}")
     public ResponseEntity<ApiResponse> deleteCustomer(
@@ -96,7 +95,6 @@ public class CustomerController {
             )
         );
     }
-
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping(path = "/customer/{customer-id}")
@@ -124,16 +122,10 @@ public class CustomerController {
         );
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> customerLogin(@Valid @RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = customerService.customerLogin(request);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-
-
-
-
-
 
 }
