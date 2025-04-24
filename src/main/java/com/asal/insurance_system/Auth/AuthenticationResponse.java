@@ -5,22 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 public class AuthenticationResponse {
 
     private String message;
-    private int statusCode;
+    private int status;
     private String token;
+    private Integer id;
 
-    public AuthenticationResponse(String message, int statusCode) {
+    public AuthenticationResponse(String message, int status) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = status;
     }
 
-    public AuthenticationResponse(String message, int statusCode, String token) {
+    public AuthenticationResponse(String message, Integer id, int status, String token) {
         this.message = message;
-        this.statusCode = statusCode;
+        this.status = status;
         this.token = token;
+        this.id = id;
     }
 }

@@ -3,17 +3,22 @@ package com.asal.insurance_system.Model;
 
 import com.asal.insurance_system.Enum.EnumClaimStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "claims")
-public class Claims {
+public class Claim {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "claim_id")
-    private Integer claimId;
+    private Integer Id;
 
-    @Column(name = "customer_id")
-    private Integer customerId;
+    @JoinColumn(name = "customer_id")
+    @ManyToOne
+    private Customer customer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -22,55 +27,43 @@ public class Claims {
     @Column(name = "amount_requested")
     private Float amountRequested;
 
+    @Column(name = "description")
+    private String description;
+
+
     @Column(name = "amount_approved")
     private Float amountApproved;
 
     @Column(name = "supporting_document")
     private String supportingDocument;
 
+    @ManyToOne
+    @JoinColumn(name = "accident_id")
+    private Accident accident;
 
-    public Integer getClaimId() {
-        return claimId;
-    }
 
     public void setClaimId(Integer claimId) {
-        this.claimId = claimId;
+        this.Id = claimId;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
-
-    public EnumClaimStatus getStatus() {
-        return status;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setStatus(EnumClaimStatus status) {
         this.status = status;
     }
 
-    public Float getAmountRequested() {
-        return amountRequested;
-    }
-
     public void setAmountRequested(Float amountRequested) {
         this.amountRequested = amountRequested;
     }
 
-    public Float getAmountApproved() {
-        return amountApproved;
-    }
-
     public void setAmountApproved(Float amountApproved) {
         this.amountApproved = amountApproved;
-    }
-
-    public String getSupportingDocument() {
-        return supportingDocument;
     }
 
     public void setSupportingDocument(String supportingDocument) {
