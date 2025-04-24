@@ -1,7 +1,10 @@
 package com.asal.insurance_system.Configuration;
 
+import com.asal.insurance_system.Repository.CustomerRepository;
 import com.asal.insurance_system.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,13 +22,28 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
 
+    private final Logger logger = LoggerFactory.getLogger(ApplicationConfig.class);
     @Bean
     public UserDetailsService userDetailsService(){
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
+        return username -> {
+            if (username.startsWith("customer_")) {
+                String subUsername = username.substring("customer_".length());
+                logger.info("Log in with customer {}", subUsername);
+                return (UserDetails) customerRepository.findByEmail(subUsername);
+            }
+            else if (username.startsWith("systemUser_")) {
+                String subUsername = username.substring("systemUser_".length());
+                logger.info("Log in with system user {}", subUsername);
+                return userRepository.findByEmail(subUsername)
+                        .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+            }
+            else {
+                throw new UsernameNotFoundException("Invalid username prefix");
+            }
+        };
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

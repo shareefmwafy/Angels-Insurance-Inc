@@ -4,10 +4,12 @@ import com.asal.insurance_system.Enum.EnumPolicyStatus;
 import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Getter
 @Entity
 @Table(name = "policy")
 public class Policy {
@@ -40,8 +42,8 @@ public class Policy {
 
     public Policy() {}
 
-    public Policy(Integer policyId, Customer customer, EnumPolicyType policyType, EnumPolicyStatus policyStatus, Float amount, LocalDate startDate, LocalDate endDate) {
-        this.policyId = policyId;
+    public Policy(Integer Id, Customer customer, EnumPolicyType policyType, EnumPolicyStatus policyStatus, Float amount, LocalDate startDate, LocalDate endDate) {
+        this.policyId = Id;
         this.customer = customer;
         this.policyType = policyType;
         this.policyStatus = policyStatus;
@@ -66,7 +68,7 @@ public class Policy {
     @Override
     public String toString() {
         return "Policy{" +
-                "policyId=" + policyId +
+                "Id=" + policyId +
                 ", customer=" + (customer != null ? customer.getId() : "null") +
                 ", policyType=" + policyType +
                 ", policyStatus=" + policyStatus +
@@ -76,56 +78,28 @@ public class Policy {
                 '}';
     }
 
-    public Integer getPolicyId() {
-        return policyId;
-    }
-
-    public void setPolicyId(Integer policyId) {
-        this.policyId = policyId;
-    }
-
-    public Customer getCustomer() {
-        return customer;
+    public void setId(Integer Id) {
+        this.policyId = Id;
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
-    public EnumPolicyType getPolicyType() {
-        return policyType;
-    }
-
     public void setPolicyType(EnumPolicyType policyType) {
         this.policyType = policyType;
-    }
-
-    public EnumPolicyStatus getPolicyStatus() {
-        return policyStatus;
     }
 
     public void setPolicyStatus(EnumPolicyStatus policyStatus) {
         this.policyStatus = policyStatus;
     }
 
-    public Float getAmount() {
-        return amount;
-    }
-
     public void setAmount(Float amount) {
         this.amount = amount;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
     }
 
     public void setEndDate(LocalDate endDate) {

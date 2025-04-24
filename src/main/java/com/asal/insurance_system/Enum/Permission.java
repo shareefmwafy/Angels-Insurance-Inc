@@ -14,7 +14,13 @@ public enum Permission {
     USER_READ("user:read"),
     USER_UPDATE("user:update"),
     USER_CREATE("user:create"),
-    USER_DELETE("user:delete")
+    USER_DELETE("user:delete"),
+
+
+    CUSTOMER_READ("customer:read"),
+    CUSTOMER_UPDATE("customer:update"),
+    CUSTOMER_DELETE("customer:delete"),
+    CUSTOMER_CREATE("customer:create")
 
     ;
 

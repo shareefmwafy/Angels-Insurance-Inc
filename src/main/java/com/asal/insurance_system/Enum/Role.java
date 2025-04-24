@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import static com.asal.insurance_system.Enum.Permission.*;
 
+@Getter
 @RequiredArgsConstructor
 public enum Role {
     ADMIN(
@@ -22,7 +23,11 @@ public enum Role {
                     USER_READ,
                     USER_UPDATE,
                     USER_DELETE,
-                    USER_CREATE
+                    USER_CREATE,
+                    CUSTOMER_READ,
+                    CUSTOMER_UPDATE,
+                    CUSTOMER_DELETE,
+                    CUSTOMER_CREATE
 
             )
     ),
@@ -31,14 +36,24 @@ public enum Role {
                     USER_READ,
                     USER_UPDATE,
                     USER_DELETE,
-                    USER_CREATE
+                    USER_CREATE,
+                    CUSTOMER_READ,
+                    CUSTOMER_UPDATE,
+                    CUSTOMER_DELETE,
+                    CUSTOMER_CREATE
             )
     ),
-    CUSTOMER(Collections.emptySet())
+    CUSTOMER(
+            Set.of(
+                    CUSTOMER_READ,
+                    CUSTOMER_UPDATE,
+                    CUSTOMER_DELETE,
+                    CUSTOMER_CREATE
+            )
+    )
 
     ;
 
-    @Getter
     private final Set<Permission> permissions;
 
     public List<SimpleGrantedAuthority> getAuthorities(){
