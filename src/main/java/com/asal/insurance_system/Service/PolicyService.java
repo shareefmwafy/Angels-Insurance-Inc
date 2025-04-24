@@ -5,8 +5,10 @@ import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
 import com.asal.insurance_system.Enum.EnumPolicyStatus;
 import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
+import com.asal.insurance_system.Mapper.PolicyMapper;
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.Policy;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.CustomerRepository;
 import com.asal.insurance_system.Repository.PolicyRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,13 @@ public class PolicyService {
     private final PolicyRepository policyRepository;
     private final CustomerRepository customerRepository;
 
+    @Autowired
+    private PolicyMapper policyMapper;
+
     private static final Logger logger = LoggerFactory.getLogger(PolicyService.class);
+
+    @Autowired
+    private AuditLogService logService;
 
     @Autowired
     public PolicyService(PolicyRepository policyRepository, CustomerRepository customerRepository) {
@@ -34,7 +42,7 @@ public class PolicyService {
         this.customerRepository = customerRepository;
     }
 
-    public Policy createPolicy(PolicyRequestDTO dto) {
+    public Policy createPolicy(PolicyRequestDTO dto, User userDetails) {
         logger.info("Attempting to create policy for customerId: {}", dto.getCustomerId());
 
         Customer customer = customerRepository.findById(dto.getCustomerId())
@@ -46,17 +54,21 @@ public class PolicyService {
         logger.info("Found customer: {} {}", customer.getFirstName(), customer.getLastName());
 
         Policy policy = new Policy();
-        policy.setCustomer(customer);
-        policy.setPolicyType(dto.getPolicyType());
-        policy.setPolicyStatus(dto.getPolicyStatus());
-        policy.setAmount(dto.getAmount());
-        policy.setStartDate(dto.getStartDate());
-        policy.setEndDate(dto.getEndDate());
+        policyMapper.policyToRequestDto(dto,policy);
 
         Policy savedPolicy = policyRepository.save(policy);
 
         logger.info("Policy created successfully with ID: {}", savedPolicy.getId());
 
+
+        logService.logAction(
+                "Create New Policy",
+                "Policy",
+                policy.getId(),
+                "", "",
+                userDetails.getId(),
+                userDetails.getRole().name()
+        );
         return savedPolicy;
     }
 
@@ -65,14 +77,7 @@ public class PolicyService {
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found with Id " + id));
 
         PolicyResponseDTO responseDTO = new PolicyResponseDTO();
-        responseDTO.setPolicyId(policy.getId());
-        responseDTO.setPolicyType(EnumPolicyType.valueOf(policy.getPolicyType().toString()));  // Assuming it's an Enum, convert to String
-        responseDTO.setPolicyStatus(EnumPolicyStatus.valueOf(policy.getPolicyStatus().toString()));
-        responseDTO.setAmount(policy.getAmount());
-        responseDTO.setStartDate(policy.getStartDate());
-        responseDTO.setEndDate(policy.getEndDate());
-        responseDTO.setCustomerId(policy.getCustomer().getId());
-
+        policyMapper.entityToDtoResponse(policy, responseDTO);
         return responseDTO;
     }
 
@@ -86,7 +91,6 @@ public class PolicyService {
     public Policy updatePolicy(int id, PolicyRequestDTO requestDTO){
         Policy policyInDb = policyRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found"));
-
         policyInDb.setPolicyStatus(requestDTO.getPolicyStatus());
         policyInDb.setPolicyType(requestDTO.getPolicyType());
         policyInDb.setAmount(requestDTO.getAmount());
@@ -96,11 +100,21 @@ public class PolicyService {
         return policyRepository.save(policyInDb);
     }
 
-    public boolean deletePolicy(int id){
+
+    public boolean deletePolicy(int id, User userDetails){
         Policy policyInDb = policyRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found"));
+        Integer policyId = policyInDb.getId();
         policyRepository.delete(policyInDb);
 
+        logService.logAction(
+                "Delete Policy",
+                "Policy",
+                policyId,
+                "","",
+                userDetails.getId(),
+                userDetails.getRole().name()
+        );
         return true;
     }
 

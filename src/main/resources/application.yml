@@ -44,3 +44,7 @@ scheduling:
   cron:
     dailyNotification: "0 0 9 * * ?" # daily Notification at 9:00
     policy-status-update: "0 0 0 * * ?"
+
+# swagger-ui custom path
+spring-doc:
+  swagger-ui.path: /swagger-ui.html

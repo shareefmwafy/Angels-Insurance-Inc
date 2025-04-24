@@ -4,16 +4,19 @@ import com.asal.insurance_system.DTO.Request.PolicyRequestDTO;
 import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.Policy;
-import com.asal.insurance_system.Service.ApiResponse;
-import com.asal.insurance_system.Service.CancellationRequestService;
+import com.asal.insurance_system.Model.User;
+import com.asal.insurance_system.Service.PolicyDocumentService;
 import com.asal.insurance_system.Service.PolicyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
 import java.util.List;
 
 import static com.asal.insurance_system.Exception.ErrorResponseUtil.createErrorResponse;
@@ -22,17 +25,20 @@ import static com.asal.insurance_system.Exception.ErrorResponseUtil.createErrorR
 @RequestMapping("/api/v1/policy")
 public class PolicyController {
     private final PolicyService policyService;
+    private final PolicyDocumentService policyDocumentService;
+
 
     @Autowired
-    public PolicyController(PolicyService policyService){
+    public PolicyController(PolicyService policyService, PolicyDocumentService policyDocumentService){
         this.policyService = policyService;
+        this.policyDocumentService = policyDocumentService;
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PostMapping("")
-    public ResponseEntity<?> createPolicy(@Valid @RequestBody PolicyRequestDTO dto){
+    public ResponseEntity<?> createPolicy(@Valid @RequestBody PolicyRequestDTO dto, @AuthenticationPrincipal User userDetails){
         try {
-            Policy newPolicy = policyService.createPolicy(dto);
+            Policy newPolicy = policyService.createPolicy(dto, userDetails);
             return new ResponseEntity<>(newPolicy, HttpStatus.CREATED);
         } catch (ResourceNotFoundException ex) {
 
@@ -71,6 +77,26 @@ public class PolicyController {
         }
     }
 
+
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletePolicy(@PathVariable Integer id) {
+        try {
+            boolean policy = policyService.deletePolicy(id);
+            return new ResponseEntity<>(policy, HttpStatus.NO_CONTENT);
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(createErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(createErrorResponse("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+
+
+
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<?> updatePolicy(@PathVariable Integer id, @RequestBody PolicyRequestDTO requestDTO) {
@@ -86,9 +112,9 @@ public class PolicyController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deletePolicy(@PathVariable Integer id) {
+    public ResponseEntity<?> deletePolicy(@PathVariable Integer id, @AuthenticationPrincipal User userDetails) {
         try {
-            boolean policy = policyService.deletePolicy(id);
+            boolean policy = policyService.deletePolicy(id, userDetails);
             return new ResponseEntity<>(policy, HttpStatus.NO_CONTENT);
         } catch (ResourceNotFoundException ex) {
             return new ResponseEntity<>(createErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
@@ -97,7 +123,19 @@ public class PolicyController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @GetMapping("/generate/{policyId}")
+    public ResponseEntity<byte[]> generatePolicyDocument(@PathVariable Integer policyId, @AuthenticationPrincipal User userDetails) throws IOException{
+        byte[] pdfContent = policyDocumentService.generatePolicyDocument(policyId,userDetails);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=policy_document.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfContent);
+    }
 
 
 

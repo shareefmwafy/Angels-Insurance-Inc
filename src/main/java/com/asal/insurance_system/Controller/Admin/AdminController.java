@@ -18,19 +18,19 @@ public class AdminController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('admin:read')")
-    public String get(){
+    public String getAdmin(){
         return "GET:: Admin Controller";
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('admin:update')")
-    public String put(){
+    public String updateAdmin(){
         return "PUT:: Admin Controller";
     }
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('admin:delete')")
-    public String Delete(){
+    public String deleteAdmin(){
         return "DELETE:: Admin Controller";
     }
 

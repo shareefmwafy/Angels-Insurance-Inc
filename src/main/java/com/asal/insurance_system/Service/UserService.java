@@ -2,11 +2,11 @@ package com.asal.insurance_system.Service;
 
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.Configuration.JwtService;
+import com.asal.insurance_system.DTO.Response.ApiResponse;
 import com.asal.insurance_system.DTO.UserDTO;
 import com.asal.insurance_system.Mapper.UserMapper;
 import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.UserRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -59,6 +59,7 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.CREATED).body(
                 new AuthenticationResponse(
                         "User Created Successfully",
+                    user.getId(),
                     HttpStatus.CREATED.value(),
                     jwtToken
                 )
