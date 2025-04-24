@@ -41,6 +41,8 @@ public class SecurityConfiguration {
                         "/webjars/**"
                 )
                 .permitAll()
+                .requestMatchers("/api/v1/customers/login")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

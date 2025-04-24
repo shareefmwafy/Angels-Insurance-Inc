@@ -20,7 +20,7 @@ public class PolicyResponseDTO {
     private Integer customerId;
 
     public PolicyResponseDTO(Policy policy) {
-        this.policyId = policy.getPolicyId();
+        this.policyId = policy.getId();
         this.policyType = policy.getPolicyType();
         this.policyStatus = policy.getPolicyStatus();
         this.amount = policy.getAmount();

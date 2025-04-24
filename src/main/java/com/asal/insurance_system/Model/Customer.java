@@ -3,9 +3,11 @@ import com.asal.insurance_system.Enum.EnumPolicyType;
 import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +24,10 @@ public class Customer extends BasePerson implements UserDetails{
 
     @Column(name = "claim_history")
     protected String claimHistory;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @OneToMany(mappedBy = "customer")
     private List<Policy> policies;
@@ -66,15 +72,63 @@ public class Customer extends BasePerson implements UserDetails{
         return Objects.hash(id);
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+
     @Override
     public String getUsername() {
         return email;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+
+    public EnumPolicyType getPolicyType() {
+        return PolicyType;
+    }
+
 
     public void setPolicyType(EnumPolicyType policyType) {
         PolicyType = policyType;
@@ -82,5 +136,13 @@ public class Customer extends BasePerson implements UserDetails{
 
     public void setClaimHistory(String claimHistory) {
         this.claimHistory = claimHistory;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

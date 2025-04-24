@@ -58,11 +58,13 @@ public class PolicyService {
 
         Policy savedPolicy = policyRepository.save(policy);
 
-        logger.info("Policy created successfully with ID: {}", savedPolicy.getPolicyId());
+        logger.info("Policy created successfully with ID: {}", savedPolicy.getId());
+
+
         logService.logAction(
                 "Create New Policy",
                 "Policy",
-                policy.getPolicyId(),
+                policy.getId(),
                 "", "",
                 userDetails.getId(),
                 userDetails.getRole().name()
@@ -75,7 +77,6 @@ public class PolicyService {
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found with Id " + id));
 
         PolicyResponseDTO responseDTO = new PolicyResponseDTO();
-
         policyMapper.entityToDtoResponse(policy, responseDTO);
         return responseDTO;
     }
@@ -90,14 +91,20 @@ public class PolicyService {
     public Policy updatePolicy(int id, PolicyRequestDTO requestDTO){
         Policy policyInDb = policyRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found"));
-        policyMapper.policyToRequestDto(requestDTO,policyInDb);
+        policyInDb.setPolicyStatus(requestDTO.getPolicyStatus());
+        policyInDb.setPolicyType(requestDTO.getPolicyType());
+        policyInDb.setAmount(requestDTO.getAmount());
+        policyInDb.setEndDate(requestDTO.getEndDate());
+        policyInDb.setStartDate(requestDTO.getStartDate());
+
         return policyRepository.save(policyInDb);
     }
+
 
     public boolean deletePolicy(int id, User userDetails){
         Policy policyInDb = policyRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("Policy Not Found"));
-        Integer policyId = policyInDb.getPolicyId();
+        Integer policyId = policyInDb.getId();
         policyRepository.delete(policyInDb);
 
         logService.logAction(

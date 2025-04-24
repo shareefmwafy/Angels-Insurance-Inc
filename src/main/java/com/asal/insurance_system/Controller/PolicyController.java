@@ -5,13 +5,8 @@ import com.asal.insurance_system.DTO.Response.PolicyResponseDTO;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.Policy;
 import com.asal.insurance_system.Model.User;
-import com.asal.insurance_system.Service.CancellationRequestService;
 import com.asal.insurance_system.Service.PolicyDocumentService;
 import com.asal.insurance_system.Service.PolicyService;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -21,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -84,6 +77,26 @@ public class PolicyController {
         }
     }
 
+
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletePolicy(@PathVariable Integer id) {
+        try {
+            boolean policy = policyService.deletePolicy(id);
+            return new ResponseEntity<>(policy, HttpStatus.NO_CONTENT);
+        } catch (ResourceNotFoundException ex) {
+            return new ResponseEntity<>(createErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(createErrorResponse("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+
+
+
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<?> updatePolicy(@PathVariable Integer id, @RequestBody PolicyRequestDTO requestDTO) {
@@ -123,5 +136,11 @@ public class PolicyController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfContent);
     }
+
+
+
+
+
+
 
 }

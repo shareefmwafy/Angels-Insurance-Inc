@@ -7,6 +7,7 @@ import com.asal.insurance_system.DTO.Response.ApiResponse;
 import com.asal.insurance_system.DTO.Response.CustomerResponse;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.User;
+import com.asal.insurance_system.Service.CancellationRequestService;
 import com.asal.insurance_system.Service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
-
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
     @Autowired
     CustomerService customerService;
+    private final CancellationRequestService cancellationRequestService;
+
+    public CustomerController(CancellationRequestService cancellationRequestService) {
+        this.cancellationRequestService = cancellationRequestService;
+    }
+
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
@@ -162,6 +168,23 @@ public class CustomerController {
         );
     }
 
+
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @PostMapping("/request-cancellation/{policyId}")
+    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason) {
+        try {
+            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason);
+            if (!result)
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("You have made this request before.", HttpStatus.CONFLICT.value()));
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Cancellation request sent successfully", HttpStatus.CREATED.value()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while requesting cancellation", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> customerLogin(@Valid @RequestBody AuthenticationRequest request) {

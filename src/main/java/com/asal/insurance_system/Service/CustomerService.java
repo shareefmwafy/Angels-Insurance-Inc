@@ -45,10 +45,9 @@ public class CustomerService {
 
     private final JwtService jwtService;
 
+
     @Autowired
     private AuditLogService logService;
-
-
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
@@ -94,6 +93,7 @@ public class CustomerService {
         );
         return true;
     }
+
 
     public CustomerResponse addCustomer(CustomerRequest customerRequest, User userDetails) {
 
@@ -183,6 +183,4 @@ public class CustomerService {
             );
         }
     }
-
-
 }
