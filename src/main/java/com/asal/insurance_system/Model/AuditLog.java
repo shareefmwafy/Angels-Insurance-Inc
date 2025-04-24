@@ -21,10 +21,66 @@ public class AuditLog {
     @Column(name = "record_id")
     private Integer recordId;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "user_type")
+    private String userType;
 
     @Column(name = "action_timestamp")
     private LocalDateTime actionTimestamp;
 
+    @Column(name = "old_value", columnDefinition = "TEXT")
+    private String oldValue;
+
+    @Column(name = "new_value", columnDefinition = "TEXT")
+    private String newValue;
+
+    @Column(name = "user_id")
+    private Integer userId;
+
+    public AuditLog() {
+    }
+
+    public AuditLog(Integer id, String actionType, String tableName, Integer recordId, String userType, LocalDateTime actionTimestamp) {
+        Id = id;
+        this.actionType = actionType;
+        this.tableName = tableName;
+        this.recordId = recordId;
+        this.userType = userType;
+        this.actionTimestamp = actionTimestamp;
+    }
+
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public void setActionType(String actionType) {
+        this.actionType = actionType;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public void setActionTimestamp(LocalDateTime actionTimestamp) {
+        this.actionTimestamp = actionTimestamp;
+    }
+
+    public void setOldValue(String oldValue) {
+        this.oldValue = oldValue;
+    }
+
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }

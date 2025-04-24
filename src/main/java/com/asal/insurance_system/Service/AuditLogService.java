@@ -1,0 +1,27 @@
+package com.asal.insurance_system.Service;
+
+import com.asal.insurance_system.Model.AuditLog;
+import com.asal.insurance_system.Repository.AuditLogRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+public class AuditLogService {
+    @Autowired
+    private AuditLogRepository auditLogRepository;
+
+    public void logAction(String actionType, String tableName, Integer recordId, String oldValue, String newValue, Integer userId, String userType) {
+        AuditLog log = new AuditLog();
+        log.setActionType(actionType);
+        log.setTableName(tableName);
+        log.setRecordId(recordId);
+        log.setActionTimestamp(LocalDateTime.now());
+        log.setOldValue(oldValue);
+        log.setNewValue(newValue);
+        log.setUserId(userId);
+        log.setUserType(userType);
+        auditLogRepository.save(log);
+    }
+}
