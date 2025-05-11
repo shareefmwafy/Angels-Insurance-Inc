@@ -31,7 +31,6 @@ public class UserService {
     private final UserMapper userMapper;
     private final JwtService jwtService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> addUser(UserDTO userDTO)
     {
         try{
@@ -58,7 +57,8 @@ public class UserService {
                         "User Created Successfully",
                     user.getId(),
                     HttpStatus.CREATED.value(),
-                    jwtToken
+                    jwtToken,
+                    user.getRole()
                 )
             );
         }

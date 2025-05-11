@@ -25,7 +25,6 @@ public class PolicyController {
     private final PolicyService policyService;
     private final PolicyDocumentService policyDocumentService;
 
-    @Autowired
     public PolicyController(PolicyService policyService, PolicyDocumentService policyDocumentService){
         this.policyService = policyService;
         this.policyDocumentService = policyDocumentService;

@@ -85,6 +85,9 @@ public class Policy {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+    public Customer getCustomer(){
+        return this.customer;
+    }
 
     public void setPolicyType(EnumPolicyType policyType) {
         this.policyType = policyType;

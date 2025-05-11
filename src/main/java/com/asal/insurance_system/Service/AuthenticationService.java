@@ -57,7 +57,8 @@ public class AuthenticationService {
                 "User Found Successfully",
                 user.getId(),
                 200,
-                jwtToken
+                jwtToken,
+                user.getRole()
         );
     }
 

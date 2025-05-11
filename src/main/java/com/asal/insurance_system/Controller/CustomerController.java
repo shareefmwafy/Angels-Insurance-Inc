@@ -43,7 +43,7 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping(path = "/customer/{customer-id}")
+    @GetMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomer(@PathVariable("customer-id") Integer customerId){
        CustomerResponse customerResponse =customerService.getCustomerById(customerId);
        return ResponseEntity.status(HttpStatus.OK).body(
@@ -73,7 +73,7 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @DeleteMapping(path = "/customer/{customer-id}")
+    @DeleteMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse> deleteCustomer(
             @PathVariable("customer-id") Integer customerId,
             @AuthenticationPrincipal User userDetails
@@ -97,7 +97,7 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @PutMapping(path = "/customer/{customer-id}")
+    @PutMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse> updateCustomer(
             @PathVariable("customer-id") Integer customerId,
             @Valid @RequestBody CustomerRequest customerRequest,

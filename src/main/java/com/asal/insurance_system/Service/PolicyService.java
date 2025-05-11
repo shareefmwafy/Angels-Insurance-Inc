@@ -42,6 +42,7 @@ public class PolicyService {
 
         Policy policy = new Policy();
         policyMapper.policyToRequestDto(dto,policy);
+        policy.setCustomer(customer);
 
         Policy savedPolicy = policyRepository.save(policy);
 

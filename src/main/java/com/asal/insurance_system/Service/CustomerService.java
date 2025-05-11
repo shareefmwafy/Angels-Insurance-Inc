@@ -151,7 +151,8 @@ public class CustomerService {
                         "Customer Logged in Successfully",
                         customer.getId(),
                         HttpStatus.OK.value(),
-                        jwtToken
+                        jwtToken,
+                        customer.getRole()
                 );
             }
 
