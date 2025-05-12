@@ -83,4 +83,40 @@ public class AuditLog {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public String getActionType() {
+        return actionType;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public Integer getRecordId() {
+        return recordId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public LocalDateTime getActionTimestamp() {
+        return actionTimestamp;
+    }
+
+    public String getOldValue() {
+        return oldValue;
+    }
+
+    public String getNewValue() {
+        return newValue;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
 }
