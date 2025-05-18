@@ -18,7 +18,7 @@ public class AuthController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping(path = "/authenticate")
+    @PostMapping
     public ResponseEntity<AuthenticationResponse> auth(@Valid @RequestBody AuthenticationRequest authRequest) {
             AuthenticationResponse response = authenticationService.login(authRequest);
         if (response.getStatus() == 200) {
