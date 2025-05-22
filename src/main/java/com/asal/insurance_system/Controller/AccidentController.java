@@ -21,7 +21,6 @@ import java.util.List;
 public class AccidentController {
     private final AccidentService accidentService;
 
-    @Autowired
     public AccidentController(AccidentService accidentService) {
         this.accidentService = accidentService;
     }
@@ -44,36 +43,18 @@ public class AccidentController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<AccidentResponse>> getAccidentById(@PathVariable Integer id) {
         AccidentResponse accident = accidentService.getAccidentById(id);
-        if (accident != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ApiResponse<>(
-                            "Accident Found Successfully",
-                            HttpStatus.OK.value(),
-                            accident
-                    )
-            );
-        }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(
-                            "Accident Not Found",
-                            HttpStatus.NOT_FOUND.value()
-
-                    )
-            );
-        }
+        return ResponseEntity.ok(new ApiResponse<>(
+                "Accident Found Successfully",
+                HttpStatus.OK.value(),
+                accident
+        ));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/{id}/status")
     public ResponseEntity<AccidentResponse> updateAccidentStatus(@PathVariable Integer id, @RequestParam String status, @AuthenticationPrincipal User userDetails) {
-        AccidentResponse updatedAccident = accidentService.updateAccidentStatus(id, status,userDetails.getId());
-        if (updatedAccident != null) {
-            return new ResponseEntity<>(updatedAccident, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        AccidentResponse updatedAccident = accidentService.updateAccidentStatus(id, status, userDetails.getId());
+        return ResponseEntity.ok(updatedAccident);
     }
-
 
 }

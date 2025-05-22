@@ -7,10 +7,8 @@ import com.asal.insurance_system.DTO.Response.ApiResponse;
 import com.asal.insurance_system.DTO.Response.CustomerResponse;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.User;
-import com.asal.insurance_system.Service.CancellationRequestService;
 import com.asal.insurance_system.Service.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,17 +17,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+
 @RestController
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-    @Autowired
-    CustomerService customerService;
-    private final CancellationRequestService cancellationRequestService;
 
-    public CustomerController(CancellationRequestService cancellationRequestService) {
-        this.cancellationRequestService = cancellationRequestService;
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
-
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
@@ -37,7 +34,7 @@ public class CustomerController {
         List<CustomerResponse> customers = customerService.getAllCustomers();
 
         return ResponseEntity.status(HttpStatus.OK).body(
-            new ApiResponse<List<CustomerResponse>>(
+            new ApiResponse<>(
             "All Customers",
                 HttpStatus.OK.value(),
                 customers
@@ -46,37 +43,16 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping(path = "/customer/{customer-id}")
+    @GetMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomer(@PathVariable("customer-id") Integer customerId){
-       try {
-           CustomerResponse customerResponse =customerService.getCustomerById(customerId);
-           return ResponseEntity.status(HttpStatus.OK).body(
-                   new ApiResponse<>(
-                           "Customer Found Successfully",
-                           HttpStatus.OK.value(),
-                           customerResponse
-                   )
-           );
-       }
-       catch (ResourceNotFoundException ex){
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                   new ApiResponse<>(
-                           ex.getMessage(),
-                           HttpStatus.NOT_FOUND.value()
-                   )
-           );
-       }
-       catch (Exception ex){
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                   new ApiResponse<>(
-                           "Error While Adding Customer",
-                           HttpStatus.INTERNAL_SERVER_ERROR.value()
-                   )
-           );
-       }
-
-
-
+       CustomerResponse customerResponse =customerService.getCustomerById(customerId);
+       return ResponseEntity.status(HttpStatus.OK).body(
+           new ApiResponse<>(
+               "Customer Found Successfully",
+               HttpStatus.OK.value(),
+               customerResponse
+           )
+       );
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -85,39 +61,19 @@ public class CustomerController {
             @Valid @RequestBody CustomerRequest customerRequest,
             @AuthenticationPrincipal User userDetails
             )
-
     {
-        try {
-            CustomerResponse customerResponse = customerService.addCustomer(customerRequest,userDetails);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    new ApiResponse<>(
-                            "Customer Created Successfully",
-                            HttpStatus.CREATED.value(),
-                            customerResponse
-                    )
-            );
-        }
-        catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    new ApiResponse<>(
-                            ex.getMessage(),
-                            HttpStatus.CONFLICT.value()
-                    )
-            );
-        }
-        catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new ApiResponse<>(
-                            "Error While Adding Customer",
-                            HttpStatus.INTERNAL_SERVER_ERROR.value()
-                    )
-            );
-        }
+        CustomerResponse customerResponse = customerService.addCustomer(customerRequest,userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            new ApiResponse<>(
+                "Customer Created Successfully",
+                HttpStatus.CREATED.value(),
+                customerResponse
+            )
+        );
     }
 
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @DeleteMapping(path = "/customer/{customer-id}")
+    @DeleteMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse> deleteCustomer(
             @PathVariable("customer-id") Integer customerId,
             @AuthenticationPrincipal User userDetails
@@ -125,25 +81,18 @@ public class CustomerController {
     ){
         boolean result =  customerService.deleteCustomerById(customerId,userDetails);
         if (result){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                    new ApiResponse<>(
-                            "User Deleted Successfully",
-                            HttpStatus.NO_CONTENT.value()
-                    )
-            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ApiResponse<>(
-                        "User Not Found",
-                        HttpStatus.NOT_FOUND.value()
-                )
+            new ApiResponse<>(
+                "User Not Found",
+                HttpStatus.NOT_FOUND.value()
+            )
         );
     }
 
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @PutMapping(path = "/customer/{customer-id}")
+    @PutMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse> updateCustomer(
             @PathVariable("customer-id") Integer customerId,
             @Valid @RequestBody CustomerRequest customerRequest,
@@ -168,34 +117,10 @@ public class CustomerController {
         );
     }
 
-
-
-    @PreAuthorize("hasRole('CUSTOMER')")
-    @PostMapping("/request-cancellation/{policyId}")
-    public ResponseEntity<ApiResponse> requestPolicyCancellation(@PathVariable Integer policyId, @RequestBody String reason) {
-        try {
-            boolean result = cancellationRequestService.requestPolicyCancellation(policyId, reason);
-            if (!result)
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("You have made this request before.", HttpStatus.CONFLICT.value()));
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Cancellation request sent successfully", HttpStatus.CREATED.value()));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), HttpStatus.NOT_FOUND.value()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("Error while requesting cancellation", HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
-    }
-
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> customerLogin(@Valid @RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = customerService.customerLogin(request);
-
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-
-
-
-
-
 
 }

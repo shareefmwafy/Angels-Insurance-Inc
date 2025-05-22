@@ -54,6 +54,11 @@ public class Customer extends BasePerson implements UserDetails{
 
     public Customer (){}
 
+    @Override
+    public Integer getId() {
+        return super.getId();
+    }
+
     public void setPolicies(List<Policy> policies) {
         this.policies = policies;
     }

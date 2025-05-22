@@ -27,6 +27,26 @@ public class UserDTO {
     @Positive(message = "Salary must be a positive number")
     private Float salary;
 
+    @NotNull(message = "Phone number is mandatory")
+    private String phoneNumber;
+
+    @NotNull(message = "Third name is mandatory")
+    private String thirdName;
+    @NotNull(message = "Third name is mandatory")
+    private String secondName;
+
+    @NotNull(message = "Street is mandatory")
+    private String street;
+
+    @NotNull(message = "City is mandatory")
+    private String city;
+
+    @NotNull(message = "Country is mandatory")
+    private String country;
+
+    @NotNull(message = "Second name is mandatory")
+
+
 
 
     public UserDTO() {
@@ -118,9 +138,58 @@ public class UserDTO {
         this.firstName = firstName;
     }
 
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getThirdName() {
+        return thirdName;
+    }
+
+    public void setThirdName(String thirdName) {
+        this.thirdName = thirdName;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
     @Override
     public String toString() {
-        return "EmployeeDTO{" +
+        return "UserDTO{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
@@ -130,6 +199,12 @@ public class UserDTO {
                 ", departmentId=" + departmentId +
                 ", hiringDate=" + hiringDate +
                 ", salary=" + salary +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", thirdName='" + thirdName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
 }

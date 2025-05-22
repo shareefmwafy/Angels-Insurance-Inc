@@ -3,12 +3,14 @@ import com.asal.insurance_system.Enum.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 @Getter
 @Entity
 @Table(name = "users")
@@ -24,19 +26,6 @@ public class User extends BasePerson implements UserDetails {
     @Column(name = "salary")
     private Float salary;
 
-    public User(String firstName, String lastName, String email, String password, String idNumber, Role role, Integer departmentId, Date hiringDate, Float salary) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.idNumber = idNumber;
-        this.role = role;
-        this.departmentId = departmentId;
-        this.hiringDate = hiringDate;
-        this.salary = salary;
-    }
-    public User(){}
-
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;
@@ -45,7 +34,6 @@ public class User extends BasePerson implements UserDetails {
         User user = (User) obj;
         return Objects.equals(id, user.getId());
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(

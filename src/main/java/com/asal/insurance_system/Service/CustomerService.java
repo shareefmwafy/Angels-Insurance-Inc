@@ -4,9 +4,7 @@ package com.asal.insurance_system.Service;
 import com.asal.insurance_system.Auth.AuthenticationRequest;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.Configuration.JwtService;
-import com.asal.insurance_system.DTO.CustomerDTO;
 import com.asal.insurance_system.DTO.Request.CustomerRequest;
-import com.asal.insurance_system.DTO.Response.ApiResponse;
 import com.asal.insurance_system.DTO.Response.CustomerResponse;
 import com.asal.insurance_system.Enum.Role;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
@@ -18,17 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -36,21 +30,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
-    @Autowired
-    CustomerRepository customerRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
+    private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
     private final CustomerMapper customerMapper;
-
     private final JwtService jwtService;
-
-
-    @Autowired
-    private AuditLogService logService;
-
-    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
-
+    private final AuditLogService logService;
+  
     public CustomerResponse updateCustomer(Integer customerId, CustomerRequest customerRequest, User userDetails) {
         Customer customerInDb = customerRepository.findById(customerId)
                 .orElseThrow(()-> new UsernameNotFoundException("Customer Not Found"));
@@ -122,7 +107,7 @@ public class CustomerService {
 
     public CustomerResponse getCustomerById(Integer customerId) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(()-> new ResourceNotFoundException("Customer Not Found"));
+                .orElseThrow(()-> new UsernameNotFoundException("Customer Not Found"));
 
         return customerMapper.mapToCustomerResponse(customer);
     }
@@ -148,10 +133,10 @@ public class CustomerService {
             if (request.getEmail().equals(customer.getEmail()) &&
                     passwordEncoder.matches(request.getPassword(), customer.getPassword())) {
 
-                logger.info("Customer Found: {}", customer.getEmail());
+                log.info("Customer Found: {}", customer.getEmail());
 
                 String jwtToken = jwtService.generateTokenForCustomer(customer);
-                logger.info("JWT Token generated successfully for customer");
+                log.info("JWT Token generated successfully for customer");
 
                 logService.logAction(
                         "Customer Login",
@@ -166,7 +151,8 @@ public class CustomerService {
                         "Customer Logged in Successfully",
                         customer.getId(),
                         HttpStatus.OK.value(),
-                        jwtToken
+                        jwtToken,
+                        customer.getRole()
                 );
             }
 
@@ -176,7 +162,7 @@ public class CustomerService {
             );
 
         } catch (Exception e) {
-            logger.error("An error occurred during customer login: {}", e.getMessage());
+            log.error("An error occurred during customer login: {}", e.getMessage());
             return new AuthenticationResponse(
                     "An error occurred during login: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR.value()

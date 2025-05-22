@@ -2,7 +2,9 @@ package com.asal.insurance_system.Service;
 import com.asal.insurance_system.Auth.AuthenticationRequest;
 import com.asal.insurance_system.Auth.AuthenticationResponse;
 import com.asal.insurance_system.Configuration.JwtService;
+import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.User;
+import com.asal.insurance_system.Repository.CustomerRepository;
 import com.asal.insurance_system.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,29 +19,48 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private AuditLogService logService;
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuditLogService logService;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-
+    private final CustomerRepository customerRepository;
 
     public AuthenticationResponse login(AuthenticationRequest authRequest) {
         Optional<User> optionalUser = userRepository.findByEmail(authRequest.getEmail());
 
         if (optionalUser.isEmpty()) {
-            return new AuthenticationResponse("User Not Found", 404);
+            Customer customer = customerRepository.findByEmail(authRequest.getEmail());
+            if(Objects.isNull(customer)){
+                return new AuthenticationResponse("User Not Found", 404);
+            }
+            if(!passwordEncoder.matches(authRequest.getPassword(), customer.getPassword())){
+                return new AuthenticationResponse("Invalid Email Or Password", 404);
+            }
+
+            String customerToken = jwtService.generateToken(customer);
+            logService.logAction(
+                    "Customer Login",
+                    " ",
+                    null,
+                    " ",
+                    " ",
+                    customer.getId(),
+                    customer.getRole().toString()
+            );
+            return new AuthenticationResponse(
+                    "Customer Found Successfully",
+                    customer.getId(),
+                    200,
+                    customerToken,
+                    customer.getRole()
+            );
         }
 
         User user = optionalUser.get();
@@ -64,7 +85,8 @@ public class AuthenticationService {
                 "User Found Successfully",
                 user.getId(),
                 200,
-                jwtToken
+                jwtToken,
+                user.getRole()
         );
     }
 

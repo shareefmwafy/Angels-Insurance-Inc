@@ -1,6 +1,4 @@
 package com.asal.insurance_system.Service;
-
-
 import com.asal.insurance_system.Model.Customer;
 import com.asal.insurance_system.Model.Policy;
 import com.asal.insurance_system.Model.User;
@@ -12,7 +10,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.element.Table;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -20,15 +18,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PolicyDocumentService {
     private final PolicyRepository policyRepository;
-
-    @Autowired
-    private AuditLogService logService;
-
-    public PolicyDocumentService(PolicyRepository policyRepository) {
-        this.policyRepository = policyRepository;
-    }
+    private final AuditLogService logService;
 
     public byte[] generatePolicyDocument(Integer policyId, User userDetails) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

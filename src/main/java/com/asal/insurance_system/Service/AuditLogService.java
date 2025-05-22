@@ -2,15 +2,16 @@ package com.asal.insurance_system.Service;
 
 import com.asal.insurance_system.Model.AuditLog;
 import com.asal.insurance_system.Repository.AuditLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AuditLogService {
-    @Autowired
-    private AuditLogRepository auditLogRepository;
+    private final AuditLogRepository auditLogRepository;
 
     public void logAction(String actionType, String tableName, Integer recordId, String oldValue, String newValue, Integer userId, String userType) {
         AuditLog log = new AuditLog();
@@ -23,5 +24,9 @@ public class AuditLogService {
         log.setUserId(userId);
         log.setUserType(userType);
         auditLogRepository.save(log);
+    }
+
+    public List<AuditLog> getAllAuditLogs(){
+        return auditLogRepository.findAll();
     }
 }
