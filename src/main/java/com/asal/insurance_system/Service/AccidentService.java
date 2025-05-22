@@ -11,6 +11,8 @@ import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.AccidentRepository;
 import com.asal.insurance_system.Repository.CustomerRepository;
 import com.asal.insurance_system.Repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
 public class AccidentService {
     private final AccidentRepository accidentRepository;
     private final CustomerRepository customerRepository;
