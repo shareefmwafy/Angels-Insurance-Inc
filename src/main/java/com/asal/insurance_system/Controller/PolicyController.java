@@ -78,25 +78,6 @@ public class PolicyController {
     }
 
 
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deletePolicy(@PathVariable Integer id) {
-        try {
-            boolean policy = policyService.deletePolicy(id);
-            return new ResponseEntity<>(policy, HttpStatus.NO_CONTENT);
-        } catch (ResourceNotFoundException ex) {
-            return new ResponseEntity<>(createErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(createErrorResponse("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
-
-
-
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<?> updatePolicy(@PathVariable Integer id, @RequestBody PolicyRequestDTO requestDTO) {
