@@ -60,7 +60,7 @@ public class PolicyDocumentService {
                 .setWidth(UnitValue.createPercentValue(100));
 
         policyTable.addCell("Policy ID:");
-        policyTable.addCell(String.valueOf(policy.get().getPolicyId()));
+        policyTable.addCell(String.valueOf(policy.get().getId()));
         policyTable.addCell("Type:");
         policyTable.addCell(policy.get().getPolicyType().name());
         policyTable.addCell("Status:");

@@ -35,8 +35,7 @@ public class CustomerService {
     private final CustomerMapper customerMapper;
     private final JwtService jwtService;
     private final AuditLogService logService;
-
-
+  
     public CustomerResponse updateCustomer(Integer customerId, CustomerRequest customerRequest, User userDetails) {
         Customer customerInDb = customerRepository.findById(customerId)
                 .orElseThrow(()-> new UsernameNotFoundException("Customer Not Found"));
@@ -79,6 +78,7 @@ public class CustomerService {
         );
         return true;
     }
+
 
     public CustomerResponse addCustomer(CustomerRequest customerRequest, User userDetails) {
 
@@ -169,6 +169,4 @@ public class CustomerService {
             );
         }
     }
-
-
 }

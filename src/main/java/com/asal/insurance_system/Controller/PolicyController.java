@@ -54,6 +54,7 @@ public class PolicyController {
         return new ResponseEntity<>(policy, HttpStatus.OK);
     }
 
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<?> updatePolicy(@PathVariable Integer id, @RequestBody PolicyRequestDTO requestDTO) {

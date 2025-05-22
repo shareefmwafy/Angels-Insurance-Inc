@@ -65,8 +65,8 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String tokenUsername = extractUsername(token);
         String userDetailsUsername = userDetails.getUsername();
-        if (userDetailsUsername == null && !userDetailsUsername.startsWith("systemUser_") && !userDetailsUsername.startsWith("customer_")) {
-            throw new UsernameNotFoundException("Invalid username prefix");
+        if (userDetailsUsername == null || (!userDetailsUsername.startsWith("systemUser_") && !userDetailsUsername.startsWith("customer_"))) {
+            throw new UsernameNotFoundException("Invalid Access Token");
         }
         String finalUsername;
         if (userDetailsUsername.startsWith("systemUser_")) {
