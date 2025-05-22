@@ -81,12 +81,7 @@ public class CustomerController {
     ){
         boolean result =  customerService.deleteCustomerById(customerId,userDetails);
         if (result){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
-                new ApiResponse<>(
-                    "User Deleted Successfully",
-                    HttpStatus.NO_CONTENT.value()
-                )
-            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
             new ApiResponse<>(
