@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 
-@Slf4j
 @Component
 @Slf4j
 public class PolicyStatusScheduler {
@@ -35,9 +34,9 @@ public class PolicyStatusScheduler {
             if(policy.getEndDate().isBefore(today) && policy.getPolicyStatus() == EnumPolicyStatus.ACTIVE){
                 policy.setPolicyStatus(EnumPolicyStatus.EXPIRED);
                 policyRepository.save(policy);
-                log.info("Policy ID {} has been marked as EXPIRED" , policy.getPolicyId());
+                log.info("Policy ID {} has been marked as EXPIRED" , policy.getId());
             }
-            log.info("Policy ID: {}", policy.getPolicyId());
+            log.info("Policy ID: {}", policy.getId());
             log.info("EndDate: {}", policy.getEndDate());
             log.info("Today: {}", today);
             log.info("Status: {}", policy.getPolicyStatus());
