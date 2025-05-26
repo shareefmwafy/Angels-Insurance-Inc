@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -50,11 +51,18 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateTokenForCustomer(Customer customer) {
+    public String generateTokenForCustomer(UserDetails userDetails){
+        return generateTokenForCustomer(new HashMap<>(), userDetails);
+    }
+
+    public String generateTokenForCustomer(
+           Map<String, Object>extraClaims,
+           UserDetails userDetails
+    ){
         return Jwts
                 .builder()
-                .setSubject("customer_"+customer.getEmail())
-                .claim("customerId",customer.getId())
+                .setClaims(extraClaims)
+                .setSubject("customer_"+userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationToken))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

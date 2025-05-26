@@ -104,4 +104,16 @@ public class PolicyService {
         return true;
     }
 
+    public List<PolicyResponseDTO> getPoliciesByCustomerId(Integer customerId) {
+        List<Policy> policies = policyRepository.findByCustomerId(customerId);
+
+        if (policies == null || policies.isEmpty()) {
+            throw new ResourceNotFoundException("No policies found for customer ID: " + customerId);
+        }
+
+        return policies.stream()
+                .map(policyMapper::entityToDtoResponse)
+                .collect(Collectors.toList());
+    }
+
 }

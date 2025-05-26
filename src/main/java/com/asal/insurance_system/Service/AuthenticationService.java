@@ -44,7 +44,7 @@ public class AuthenticationService {
                 return new AuthenticationResponse("Invalid Email Or Password", 404);
             }
 
-            String customerToken = jwtService.generateToken(customer);
+            String customerToken = jwtService.generateTokenForCustomer(customer);
             logService.logAction(
                     "Customer Login",
                     " ",

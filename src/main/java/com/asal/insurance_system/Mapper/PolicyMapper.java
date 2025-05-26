@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface PolicyMapper {
 
@@ -15,4 +17,6 @@ public interface PolicyMapper {
 
     @Mapping(source = "customer.id", target = "customerId")
     void entityToDtoResponse(Policy entity, @MappingTarget PolicyResponseDTO dto);
+
+    PolicyResponseDTO entityToDtoResponse(Policy entity);
 }
