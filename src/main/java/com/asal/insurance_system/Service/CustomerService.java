@@ -119,56 +119,56 @@ public class CustomerService {
                      .collect(Collectors.toList());
     }
 
-    public AuthenticationResponse customerLogin(AuthenticationRequest request) {
-        try {
-            Customer customer = customerRepository.findByEmail(request.getEmail());
-
-            if (Objects.isNull(customer)) {
-                return new AuthenticationResponse(
-                        "Customer Not Found",
-                        HttpStatus.NOT_FOUND.value()
-                );
-            }
-
-            if (request.getEmail().equals(customer.getEmail()) &&
-                    passwordEncoder.matches(request.getPassword(), customer.getPassword())) {
-
-                log.info("Customer Found: {}", customer.getEmail());
-
-                String jwtToken = jwtService.generateTokenForCustomer(customer);
-                log.info("JWT Token generated successfully for customer");
-
-                logService.logAction(
-                        "Customer Login",
-                        "Customers",
-                        customer.getId(),
-                        "", "",
-                        customer.getId(),
-                        customer.getRole().name()
-                );
-
-                return new AuthenticationResponse(
-                        "Customer Logged in Successfully",
-                        customer.getId(),
-                        HttpStatus.OK.value(),
-                        jwtToken,
-                        customer.getRole()
-                );
-            }
-
-            return new AuthenticationResponse(
-                    "Invalid email or password",
-                    HttpStatus.UNAUTHORIZED.value()
-            );
-
-        } catch (Exception e) {
-            log.error("An error occurred during customer login: {}", e.getMessage());
-            return new AuthenticationResponse(
-                    "An error occurred during login: " + e.getMessage(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.value()
-            );
-        }
-    }
+//    public AuthenticationResponse customerLogin(AuthenticationRequest request) {
+//        try {
+//            Customer customer = customerRepository.findByEmail(request.getEmail());
+//
+//            if (Objects.isNull(customer)) {
+//                return new AuthenticationResponse(
+//                        "Customer Not Found",
+//                        HttpStatus.NOT_FOUND.value()
+//                );
+//            }
+//
+//            if (request.getEmail().equals(customer.getEmail()) &&
+//                    passwordEncoder.matches(request.getPassword(), customer.getPassword())) {
+//
+//                log.info("Customer Found: {}", customer.getEmail());
+//
+//                String jwtToken = jwtService.generateTokenForCustomer(customer);
+//                log.info("JWT Token generated successfully for customer");
+//
+//                logService.logAction(
+//                        "Customer Login",
+//                        "Customers",
+//                        customer.getId(),
+//                        "", "",
+//                        customer.getId(),
+//                        customer.getRole().name()
+//                );
+//
+//                return new AuthenticationResponse(
+//                        "Customer Logged in Successfully",
+//                        customer.getId(),
+//                        HttpStatus.OK.value(),
+//                        jwtToken,
+//                        customer.getRole()
+//                );
+//            }
+//
+//            return new AuthenticationResponse(
+//                    "Invalid email or password",
+//                    HttpStatus.UNAUTHORIZED.value()
+//            );
+//
+//        } catch (Exception e) {
+//            log.error("An error occurred during customer login: {}", e.getMessage());
+//            return new AuthenticationResponse(
+//                    "An error occurred during login: " + e.getMessage(),
+//                    HttpStatus.INTERNAL_SERVER_ERROR.value()
+//            );
+//        }
+//    }
 
 
 }

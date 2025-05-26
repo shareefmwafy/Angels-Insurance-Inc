@@ -73,7 +73,6 @@ public class UserService {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> getUserById(Integer userId)
     {
         try

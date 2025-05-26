@@ -42,7 +42,7 @@ public class CustomerController {
         );
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('CUSTOMER')")
     @GetMapping(path = "/{customer-id}")
     public ResponseEntity<ApiResponse<CustomerResponse>> getCustomer(@PathVariable("customer-id") Integer customerId){
        CustomerResponse customerResponse =customerService.getCustomerById(customerId);
@@ -117,10 +117,10 @@ public class CustomerController {
         );
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> customerLogin(@Valid @RequestBody AuthenticationRequest request) {
-        AuthenticationResponse response = customerService.customerLogin(request);
-        return ResponseEntity.status(response.getStatus()).body(response);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<AuthenticationResponse> customerLogin(@Valid @RequestBody AuthenticationRequest request) {
+//        AuthenticationResponse response = customerService.customerLogin(request);
+//        return ResponseEntity.status(response.getStatus()).body(response);
+//    }
 
 }

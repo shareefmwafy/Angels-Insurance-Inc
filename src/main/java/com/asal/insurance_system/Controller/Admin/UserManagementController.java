@@ -28,7 +28,7 @@ public class UserManagementController {
         return userService.getAllUsers();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('CUSTOMER')")
     @GetMapping(path = "/user/{userId}")
     public ResponseEntity<Object> getUser(@PathVariable("userId") Integer userId)
     {

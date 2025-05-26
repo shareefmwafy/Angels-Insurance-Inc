@@ -47,14 +47,14 @@ public class PolicyController {
         return new ResponseEntity<>(policies, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("{id}")
     public ResponseEntity<?> getPolicyById(@PathVariable Integer id) {
         PolicyResponseDTO policy = policyService.getPolicyById(id);
         return new ResponseEntity<>(policy, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping("/byCustomer/{CustomerId}")
     public ResponseEntity<?> getPolicyByCustomerId(@PathVariable Integer CustomerId) {
         List<PolicyResponseDTO> policies = policyService.getPoliciesByCustomerId(CustomerId);
