@@ -16,7 +16,7 @@ public class Policy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "policy_id")
-    private Integer policyId;
+    private Integer Id;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)  // Foreign key reference
@@ -43,7 +43,7 @@ public class Policy {
     public Policy() {}
 
     public Policy(Integer Id, Customer customer, EnumPolicyType policyType, EnumPolicyStatus policyStatus, Float amount, LocalDate startDate, LocalDate endDate) {
-        this.policyId = Id;
+        this.Id = Id;
         this.customer = customer;
         this.policyType = policyType;
         this.policyStatus = policyStatus;
@@ -57,18 +57,18 @@ public class Policy {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Policy policy = (Policy) obj;
-        return Objects.equals(policyId, policy.policyId);
+        return Objects.equals(Id, policy.Id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(policyId);
+        return Objects.hash(Id);
     }
 
     @Override
     public String toString() {
         return "Policy{" +
-                "Id=" + policyId +
+                "Id=" + Id +
                 ", customer=" + (customer != null ? customer.getId() : "null") +
                 ", policyType=" + policyType +
                 ", policyStatus=" + policyStatus +
@@ -79,7 +79,7 @@ public class Policy {
     }
 
     public void setId(Integer Id) {
-        this.policyId = Id;
+        this.Id = Id;
     }
 
     public void setCustomer(Customer customer) {

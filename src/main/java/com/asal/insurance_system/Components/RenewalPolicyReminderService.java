@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -31,8 +32,10 @@ public class RenewalPolicyReminderService {
             Customer customer = policy.getCustomer();
             Notification notification = new Notification();
             notification.setTitle("Policy Renewal Reminder");
-            notification.setMessage("Your policy #" + policy.getPolicyId() +
-                    " will expire on " + policy.getEndDate() + ". Please renew it.");
+            notification.setMessage(String.format(
+                    "Your policy # %d will expire on %s. Please renew it.",
+                    policy.getId(),
+                    policy.getEndDate()));
             notification.setCustomer(customer);
             notificationRepository.save(notification);
         }
