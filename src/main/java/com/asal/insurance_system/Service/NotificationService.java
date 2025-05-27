@@ -21,7 +21,7 @@ public class NotificationService {
     public List<NotificationResponse> findRenewalByCustomerId(Integer customerId, Integer loggedInCustomer) {
         if (customerId.equals(loggedInCustomer)) {
 
-            List<Notification> notifications = notificationRepository.findByCustomerIdAndReadFalse(customerId);
+            List<Notification> notifications = notificationRepository.findByCustomerId(customerId);
             return notifications.stream()
                     .map(notificationMapper::mapToDto)
                     .collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package com.asal.insurance_system.Exception;
 import com.asal.insurance_system.DTO.Response.ApiResponse;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -69,12 +70,18 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AuthorizationDeniedException ex) {
         ApiResponse response = new ApiResponse(
                 "Access Denied: You don't have permission to access this resource.",
                 HttpStatus.FORBIDDEN.value()
         );
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(ExpiredJwtException.class)
+    public Map<String, Object> handleExpiredJwtException(ExpiredJwtException ex) {
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Your session has expired. Please log in again.");
     }
 
     private Map<String, Object> buildErrorResponse(HttpStatus status, String message) {

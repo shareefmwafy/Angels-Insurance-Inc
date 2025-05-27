@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 public class NotificationResponse {
+    private Integer id;
     private String title;
     private String message;
 
@@ -29,5 +30,8 @@ public class NotificationResponse {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+        public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -15,7 +15,6 @@ public interface PolicyMapper {
 
     void policyToRequestDto(PolicyRequestDTO dto, @MappingTarget Policy entity);
 
-    @Mapping(source = "customer.id", target = "customerId")
     void entityToDtoResponse(Policy entity, @MappingTarget PolicyResponseDTO dto);
 
     PolicyResponseDTO entityToDtoResponse(Policy entity);
