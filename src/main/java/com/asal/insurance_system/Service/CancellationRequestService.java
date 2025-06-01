@@ -7,12 +7,15 @@ import com.asal.insurance_system.Enum.EnumPolicyStatus;
 import com.asal.insurance_system.Exception.ResourceNotFoundException;
 import com.asal.insurance_system.Model.CancellationRequest;
 import com.asal.insurance_system.Model.Policy;
+import com.asal.insurance_system.Model.User;
 import com.asal.insurance_system.Repository.CancellationRequestRepository;
 import com.asal.insurance_system.Repository.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 

@@ -55,9 +55,9 @@ public class PolicyController {
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
-    @GetMapping("/byCustomer/{CustomerId}")
-    public ResponseEntity<?> getPolicyByCustomerId(@PathVariable Integer CustomerId) {
-        List<PolicyResponseDTO> policies = policyService.getPoliciesByCustomerId(CustomerId);
+    @GetMapping("/byCustomer/{customerId}")
+    public ResponseEntity<?> getPolicyByCustomerId(@PathVariable("customerId") Integer customerId) {
+        List<PolicyResponseDTO> policies = policyService.getPoliciesByCustomerId(customerId);
         return new ResponseEntity<>(policies , HttpStatus.OK);
     }
 

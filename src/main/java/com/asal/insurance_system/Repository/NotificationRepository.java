@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
-    List<Notification> findByCustomerIdAndReadFalse(Integer customerId);
+    List<Notification> findByCustomerId(Integer customerId);
 }

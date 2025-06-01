@@ -46,7 +46,7 @@ public class PolicyService {
 
         Policy savedPolicy = policyRepository.save(policy);
 
-        log.info("Policy created successfully with ID: {}", savedPolicy.getPolicyId());
+        log.info("Policy created successfully with ID: {}", savedPolicy.getId());
         logService.logAction(
                 "Create New Policy",
                 "Policy",

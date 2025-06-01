@@ -11,32 +11,30 @@ import java.time.LocalDate;
 
 public class PolicyResponseDTO {
 
-    private Integer policyId;
+    private Integer id;
     private EnumPolicyType policyType;
     private EnumPolicyStatus policyStatus;
     private Float amount;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Integer customerId;
 
     public PolicyResponseDTO(Policy policy) {
-        this.policyId = policy.getId();
+        this.id = policy.getId();
         this.policyType = policy.getPolicyType();
         this.policyStatus = policy.getPolicyStatus();
         this.amount = policy.getAmount();
         this.startDate = policy.getStartDate();
         this.endDate = policy.getEndDate();
-        this.customerId = policy.getCustomer().getId();
     }
 
     public PolicyResponseDTO(){}
 
-    public Integer getPolicyId() {
-        return policyId;
+    public Integer getid() {
+        return id;
     }
 
-    public void setPolicyId(Integer policyId) {
-        this.policyId = policyId;
+    public void setid(Integer id) {
+        this.id = id;
     }
 
     public EnumPolicyType getPolicyType() {
@@ -79,11 +77,5 @@ public class PolicyResponseDTO {
         this.endDate = endDate;
     }
 
-    public Integer getCustomerId() {
-        return customerId;
-    }
 
-    public void setCustomerId(Integer customerId) {
-        this.customerId = customerId;
-    }
 }
