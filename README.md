@@ -98,7 +98,7 @@ spring:
 ### Installation
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/shareefmwafy/Angels-Insurance-Inc
 cd insurance-system
 ```
 
@@ -249,9 +249,4 @@ Use the built-in Swagger UI at `/swagger-ui.html` for testing API endpoints with
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
-
-## License
-
-This project is proprietary software owned by Angels Insurance Inc.
-
 ---
